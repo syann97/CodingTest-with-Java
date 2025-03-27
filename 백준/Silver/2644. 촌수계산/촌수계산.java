@@ -37,11 +37,9 @@ public class Main {
             graph[x].add(y);
             graph[y].add(x);
         }
-
         System.out.println(dfs(v1, 0));
-
-
     }
+    
     static int dfs(int s, int before) {
         visited[s] = visited[before] + 1;
 
