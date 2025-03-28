@@ -10,7 +10,7 @@ public class Main {
     static int K;
     static Queue<int[]> queue = new ArrayDeque<>();
     static int[] dx = {-1, 1, 0};
-    static int[] visited = new int[100001];
+    static boolean[] visited = new boolean[100001];
 
     public static void main(String[] args) throws IOException {
         st = new StringTokenizer(br.readLine());
@@ -21,7 +21,7 @@ public class Main {
     }
 
     static int bfs() {
-        visited[N] = 1;
+        visited[N] = true;
         while (!queue.isEmpty()) {
             int[] tmp = queue.poll();
             int x = tmp[0];
@@ -34,8 +34,8 @@ public class Main {
             dx[2] = x;
             for (int i = 0; i < 3; i++) {
                 int nx = x + dx[i];
-                if (0 <= nx && nx <= 100000 && visited[nx] == 0) {
-                    visited[nx] = t+1;
+                if (0 <= nx && nx <= 100000 && !visited[nx]) {
+                    visited[nx] = true;
                     queue.add(new int[]{nx, t+1});
                 }
             }
