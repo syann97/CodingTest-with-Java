@@ -8,7 +8,6 @@ public class Main {
     static StringTokenizer st;
     static int N;
     static int K;
-    static Queue<int[]> queue = new ArrayDeque<>();
     static int[] dx = {-1, 1, 0};
     static boolean[] visited = new boolean[100001];
 
@@ -16,12 +15,16 @@ public class Main {
         st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
-        queue.add(new int[]{N, 1});
-        System.out.println(bfs());
+
+        if (N >= K) System.out.println(N-K);
+        else System.out.println(bfs());
     }
 
     static int bfs() {
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[]{N, 1});
         visited[N] = true;
+
         while (!queue.isEmpty()) {
             int[] tmp = queue.poll();
             int x = tmp[0];
