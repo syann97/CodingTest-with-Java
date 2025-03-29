@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -13,57 +14,62 @@ public class Main {
     static int[] dy = {-1, 0, 1, 0};
     static int N;
     static Queue<int[]> queue = new ArrayDeque<>();
+    static boolean[][] visited;
 
     public static void main(String[] args) throws IOException {
         N = Integer.parseInt(br.readLine());
         grid = new char[N][N];
-
+    
         for (int i = 0; i < N; i++) {
             String tmp = br.readLine();
             for (int j = 0; j < N; j++) {
                 grid[i][j] = tmp.charAt(j);
             }
         }
-        System.out.print(bfs() + " ");
-
-
+        
+        int count1 = 0;
+        visited = new boolean[N][N];
         for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (!visited[i][j]) {
+                    visited[i][j] = true;
+                    dfs(i, j, grid[i][j]);
+                    count1++;
+                }
+            }
+        }
+        System.out.print(count1 + " ");
+
+        
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(visited[i], false);
             for (int j = 0; j < N; j++) {
                 if (grid[i][j] == 'R') grid[i][j] = 'G';
             }
         }
-        System.out.println(bfs());
-    }
 
-
-    static int bfs() {
-        boolean[][] visited = new boolean[N][N];
-        int count = 0;
+        int count2 = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 if (!visited[i][j]) {
-                    count++;
-                    queue.add(new int[]{i, j});
                     visited[i][j] = true;
-
-                    while (!queue.isEmpty()) {
-                        int[] tmp = queue.poll();
-                        int y = tmp[0];
-                        int x = tmp[1];
-
-                        for (int k = 0; k < 4; k++) {
-                            int ny = y + dy[k];
-                            int nx = x + dx[k];
-
-                            if (0 <= nx && nx < N && 0 <= ny && ny < N && !visited[ny][nx] && grid[i][j] == grid[ny][nx]) {
-                                visited[ny][nx] = true;
-                                queue.add(new int[]{ny, nx});
-                            }
-                        }
-                    }
+                    dfs(i, j, grid[i][j]);
+                    count2++;
                 }
             }
         }
-        return count;
+        System.out.println(count2);
+    }
+    
+    
+    static void dfs(int y, int x, char t) {
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if (0 <= nx && nx < N && 0 <= ny && ny < N && !visited[ny][nx] && grid[ny][nx] == t) {
+                visited[ny][nx] = true;
+                dfs(ny, nx, t);
+            }
+        }
     }
 }
