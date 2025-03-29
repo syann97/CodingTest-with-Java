@@ -2,16 +2,14 @@ class Solution {
     int[] nums;
     int N;
     int T;
-    int count = 0;
     
-    public void bf(int idx, int sum) {   
+    public int dfs(int idx, int sum) {   
         if (idx == N) {
-            if (sum == T && idx == N) count++;
-            return;
+            if (sum == T && idx == N) return 1;
+            return 0;
         }
         
-        bf(idx+1, sum);
-        bf(idx+1, sum-(nums[idx]*2));
+        return dfs(idx+1, sum) + dfs(idx+1, sum-(nums[idx]*2));
     }
     
     public int solution(int[] numbers, int target) {
@@ -24,7 +22,6 @@ class Solution {
             total += numbers[i];
         }
 
-        bf(0, total);
-        return count;
+        return dfs(0, total);
     }
 }
