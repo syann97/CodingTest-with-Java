@@ -24,15 +24,13 @@ public class Main {
         A = new int[H][W];
         B = new int[H+X][W+Y];
 
-        for (int i = 0; i < H+X; i++) {
+        for (int i = 0; i < H; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < W+Y; j++) {
+            for (int j = 0; j < W; j++) {
                 B[i][j] = Integer.parseInt(st.nextToken());
-                if (i < H && j < W) {
-                    if (i >= X && j >= Y) A[i][j] = B[i][j]-A[i-X][j-Y];
-                    else A[i][j] = B[i][j];
-                    sb.append(A[i][j]).append(' ');
-                }
+                if (i >= X && j >= Y) A[i][j] = B[i][j]-A[i-X][j-Y];
+                else A[i][j] = B[i][j];
+                sb.append(A[i][j]).append(' ');
             }
             if (i < H) sb.append('\n');
         }
