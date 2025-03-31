@@ -12,7 +12,6 @@ public class Main {
     static int X;
     static int Y;
     static int[][] A;
-    static int[][] B;
 
 
     public static void main(String[] args) throws IOException {
@@ -22,14 +21,13 @@ public class Main {
         X = Integer.parseInt(st.nextToken());
         Y = Integer.parseInt(st.nextToken());
         A = new int[H][W];
-        B = new int[H][W];
 
         for (int i = 0; i < H; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < W; j++) {
-                B[i][j] = Integer.parseInt(st.nextToken());
-                if (i >= X && j >= Y) A[i][j] = B[i][j]-A[i-X][j-Y];
-                else A[i][j] = B[i][j];
+                A[i][j] = Integer.parseInt(st.nextToken());
+                if (i >= X && j >= Y) A[i][j] = A[i][j]-A[i-X][j-Y];
+                else A[i][j] = A[i][j];
                 sb.append(A[i][j]).append(' ');
             }
             sb.append('\n');
