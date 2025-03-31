@@ -22,7 +22,7 @@ public class Main {
         X = Integer.parseInt(st.nextToken());
         Y = Integer.parseInt(st.nextToken());
         A = new int[H][W];
-        B = new int[H+X][W+Y];
+        B = new int[H][W];
 
         for (int i = 0; i < H; i++) {
             st = new StringTokenizer(br.readLine());
@@ -32,7 +32,7 @@ public class Main {
                 else A[i][j] = B[i][j];
                 sb.append(A[i][j]).append(' ');
             }
-            if (i < H) sb.append('\n');
+            sb.append('\n');
         }
         System.out.print(sb);
     }
