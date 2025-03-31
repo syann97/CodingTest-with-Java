@@ -27,7 +27,6 @@ public class Main {
             for (int j = 0; j < W; j++) {
                 A[i][j] = Integer.parseInt(st.nextToken());
                 if (i >= X && j >= Y) A[i][j] = A[i][j]-A[i-X][j-Y];
-                else A[i][j] = A[i][j];
                 sb.append(A[i][j]).append(' ');
             }
             sb.append('\n');
