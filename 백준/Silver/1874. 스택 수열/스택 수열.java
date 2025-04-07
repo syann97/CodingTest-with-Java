@@ -1,44 +1,45 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuffer bf = new StringBuffer();
-        int n = Integer.parseInt(br.readLine());
-        Stack<Integer> stack = new Stack<>();
-        int current = 1; // 오름차순 숫자
-        boolean isPrintNo = false;
+        StringBuilder sb = new StringBuilder();
+        int N = Integer.parseInt(br.readLine());
+        int idx = 1;
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        boolean flag = true;
 
-        for (int i = 0; i < n; i++) {
-            int num = Integer.parseInt(br.readLine());
-            if (current <= num) {
-                while (current <= num) {
-                    stack.push(current);
-                    current++;
-                    bf.append("+\n");
+
+        for (int i = 0; i < N; i++) {
+            int target = Integer.parseInt(br.readLine());
+            if (idx <= target) {
+                for (int j = idx; j <= target; j++) {
+                    stack.push(j);
+                    sb.append('+').append('\n');
                 }
+                idx = target + 1;
+                sb.append('-').append('\n');
                 stack.pop();
-                bf.append("-\n");
             }
             else {
-                if (stack.peek() == num) {
-                    stack.pop();
-                    bf.append("-\n");
+                if (stack.isEmpty() || target > stack.peek()) {
+                    flag = false;
+                    break;
                 }
-                else {
-                    isPrintNo = true;
+                while (!stack.isEmpty()) {
+                    int num = stack.pop();
+                    sb.append('-').append('\n');
+
+                    if (target == num) {
+                        break;
+                    }
                 }
             }
-            if (isPrintNo) {
-                break;
-            }
-
-
         }
-        if (isPrintNo) {
-            System.out.println("NO");
-        }
-        else System.out.println(bf.toString());
+        if (flag) System.out.print(sb);
+        else System.out.println("NO");
     }
 }
