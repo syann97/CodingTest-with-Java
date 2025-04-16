@@ -3,83 +3,82 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.StringTokenizer;
 
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringBuilder sb = new StringBuilder();
-    static String[] numbers;
     static boolean isReversed = false;
     static boolean isError = false;
-    static Deque<Integer> deque = new ArrayDeque<>();
+    static Deque<String> dq = new ArrayDeque<>();
     public static void main(String[] args) throws IOException {
         int T = Integer.parseInt(br.readLine());
         while (T --> 0) {
             // 변수 선언
             String operations = br.readLine();
             int N = Integer.parseInt(br.readLine());
-            String input = br.readLine();
 
             // 변수 초기화
-            deque.clear();
+            dq.clear();
             isReversed = false;
             isError = false;
             sb.setLength(0);
 
             // 파싱된 숫자를 덱에 추가
-            input = input.replaceAll("\\[|\\]", ""); // "[" 또는 "]" 제거
-
-            if (input.isEmpty()) numbers = new String[0];
-            else {
-                numbers = input.split(",");
-                for (String numStr : numbers) {
-                    deque.add(Integer.parseInt(numStr.trim())); // 공백 제거 후 정수로 변환
-                }
-            }
+            StringTokenizer st = new StringTokenizer(br.readLine(), "[,]");
+            while(st.hasMoreTokens()) dq.add(st.nextToken());
 
             // 명령어에 따른 연산 수행
             for (int i = 0; i < operations.length(); i++) {
                 char operation = operations.charAt(i);
 
                 if (operation == 'R') isReversed = !isReversed;
-                else if (delete()) break;
+                else { if (delete()) break; }
             }
 
-            if (isError) System.out.println("error");
-            else {
-                sb.append("[");
-                if (isReversed) popDeque();
-                else pollDeque();
-                sb.append("]");
-                System.out.println(sb);
+            if (isError) {
+                System.out.println("error");
+                continue;
             }
+
+            // 출력 로직
+            printStringBuilder();
         }
     }
 
     static boolean delete() {
-        if (deque.isEmpty()) {
+        if (dq.isEmpty()) {
             isError = true;
             return true;
         }
-        if (isReversed) deque.pollLast();
-        else deque.poll();
+        if (isReversed) dq.pollLast();
+        else dq.poll();
         return false;
     }
 
-    static void pollDeque() {
-        while (!deque.isEmpty()) {
-            sb.append(deque.pollFirst());
-            if (!deque.isEmpty()) {
+    static void pollFirst() {
+        while (!dq.isEmpty()) {
+            sb.append(dq.pollFirst());
+            if (!dq.isEmpty()) {
                 sb.append(",");
             }
         }
     }
 
-    static void popDeque() {
-        while (!deque.isEmpty()) {
-            sb.append(deque.pollLast());
-            if (!deque.isEmpty()) {
+    static void pollLast() {
+        while (!dq.isEmpty()) {
+            sb.append(dq.pollLast());
+            if (!dq.isEmpty()) {
                 sb.append(',');
             }
         }
+    }
+
+    static void printStringBuilder() {
+        sb.append("[");
+        if (isReversed) pollLast();
+        else pollFirst();
+        sb.append("]");
+        System.out.println(sb);
     }
 }
