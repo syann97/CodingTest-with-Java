@@ -8,8 +8,8 @@ import java.util.StringTokenizer;
 
 
 class Node implements Comparable<Node> {
-    int dest;
-    int cost;
+    int dest;   // 도착 노드
+    int cost;   // 비용
 
     public Node(int dest, int cost) {
         this.dest = dest;
@@ -25,13 +25,11 @@ class Node implements Comparable<Node> {
 
 
 public class Main {
+    // static 변수 정의
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
     static int N;
     static int M;
-    static ArrayList<Node>[] graph;
-    static ArrayList<Node>[] graph_reversed;
-
     static int X;
 
     public static void main(String[] args) throws IOException {
@@ -40,9 +38,8 @@ public class Main {
         M = Integer.parseInt(st.nextToken());
         X = Integer.parseInt(st.nextToken());
 
-
-        graph = new ArrayList[N+1];
-        graph_reversed = new ArrayList[N+1];
+        ArrayList<Node>[] graph = new ArrayList[N+1];
+        ArrayList<Node>[] graph_reversed = new ArrayList[N+1];
 
 
         for (int i = 1; i <= N; i++) {
@@ -60,32 +57,33 @@ public class Main {
             graph_reversed[y].add(new Node(x, c));
         }
 
-        System.out.println(getResult(dijkstra(graph), dijkstra(graph_reversed)));
+        System.out.println(getAnswer(dijkstra(graph), dijkstra(graph_reversed)));
     }
 
     static int[] dijkstra (ArrayList<Node>[] graph) {
+        // 변수 선언
         PriorityQueue<Node> pq = new PriorityQueue<>();
         int[] visited = new int[N+1];
+
+        // 변수 초기화
         Arrays.fill(visited, Integer.MAX_VALUE);
         visited[X] = 0;
-
-        pq.add(new Node(X, 0));
+        pq.offer(new Node(X, 0));
 
         while(!pq.isEmpty()) {
             Node now = pq.poll();
 
             for (Node next : graph[now.dest]) {
-                int total_cost = now.cost + next.cost;
-                if (total_cost <= visited[next.dest]) {
-                    visited[next.dest] = total_cost;
-                    pq.add(new Node(next.dest, total_cost));
+                if (visited[next.dest] > visited[now.dest] + next.cost) {
+                    visited[next.dest] = visited[now.dest] + next.cost;
+                    pq.offer(new Node(next.dest, visited[next.dest]));
                 }
             }
         }
         return visited;
     }
 
-    static int getResult(int[] a, int[] b) {
+    static int getAnswer(int[] a, int[] b) {
         int answer = 0;
         for (int i = 1; i <= N; i++) {
             answer = Math.max(answer, a[i] + b[i]);
