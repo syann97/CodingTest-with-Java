@@ -51,20 +51,17 @@ public class Main {
         }
 
         space[y][x] = 0;
-        while (true) {
-            // 먹을 수 있는 물고기가 없는 경우
-            if (!isEatable()) break;
-
-            int move = goToPrey();
+        while (canEat()) {
+            int move = bfs();
             if (move == -1) break;
             total_dist += move;
-            eatFish();
+            eat();
         }
         System.out.println(total_dist);
     }
 
     // 더 이상 먹을 수 있는 물고기가 공간에 없다면 아기 상어는 엄마 상어에게 도움을 요청한다.
-    static boolean isEatable() {
+    static boolean canEat() {
         for (int i = 1; i < Math.min(size, 7); i++) {
             if (prey[i] > 0) return true;
         }
@@ -72,7 +69,7 @@ public class Main {
     }
 
     // 먹을 수 있는 물고기가 1마리라면, 그 물고기를 먹으러 간다.
-    static int goToPrey() {
+    static int bfs() {
         ArrayDeque<BabyShark> queue = new ArrayDeque<>();
         queue.offer(new BabyShark(x, y, 0));
         boolean[][] visited = new boolean[N][N];
@@ -80,7 +77,6 @@ public class Main {
 
         while (!queue.isEmpty()) {
             BabyShark shark = queue.poll();
-
             x = shark.x;
             y = shark.y;
             int dist = shark.dist;
@@ -100,22 +96,20 @@ public class Main {
                         }
                     }
                 }
-
                 prey[space[y][x]]--;
                 space[y][x] = 0;
                 return dist;
             }
 
+            // 4방향 갱신
             for (int d = 0; d < 4; d++) {
                 int ny = y + dy[d];
                 int nx = x + dx[d];
-                int n_dist = dist + 1;
-
 
                 // 자신의 크기보다 큰 상어가 있는 경우 가지 못한다.
                 if (0 <= ny && ny < N && 0 <= nx && nx < N && !visited[ny][nx] && space[ny][nx] <= size) {
                     visited[ny][nx] = true;
-                    queue.offer(new BabyShark(nx, ny, n_dist));
+                    queue.offer(new BabyShark(nx, ny, dist + 1));
                 }
             }
         }
@@ -123,7 +117,7 @@ public class Main {
     }
 
 
-    static void eatFish() {
+    static void eat() {
         count++;
         if (count == size) {
             size++;
