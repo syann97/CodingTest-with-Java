@@ -21,6 +21,7 @@ public class Main {
     static int M;
     static int[][] area;
     static boolean[][] isMelt;
+    static boolean[][] visited;
     static int[] dy = {-1, 0, 1, 0};
     static int[] dx = {0, -1, 0, 1};
 
@@ -56,11 +57,11 @@ public class Main {
 
     static int counting() {
         int count = 0;
-        boolean[][] visited = new boolean[N][M];
+        visited = new boolean[N][M];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 if (area[i][j] > 0 && !visited[i][j]) {
-                    bfs(i, j, visited);
+                    dfs(i, j);
                     count++;
                 }
             }
@@ -68,24 +69,13 @@ public class Main {
         return count;
     }
 
-    static void bfs(int sy, int sx, boolean[][] visited) {
-        ArrayDeque<Node> q = new ArrayDeque<>();
-        q.offer(new Node(sx, sy));
-        visited[sy][sx] = true;
-
-        while (!q.isEmpty()) {
-            Node node = q.poll();
-            int x = node.x;
-            int y = node.y;
-
-            for (int d = 0; d < 4; d++) {
-                int ny = y + dy[d];
-                int nx = x + dx[d];
-
-                if (0 <= ny && ny < N && 0 <= nx && nx < M && !visited[ny][nx] && area[ny][nx] > 0) {
-                    visited[ny][nx] = true;
-                    q.offer(new Node(nx, ny));
-                }
+    static void dfs(int y, int x) {
+        for (int d = 0; d < 4; d++) {
+            int ny = y + dy[d];
+            int nx = x + dx[d];
+            if (0 <= ny && ny < N && 0 <= nx && nx < M && !visited[ny][nx] && area[ny][nx] > 0) {
+                visited[ny][nx] = true;
+                dfs(ny, nx);
             }
         }
     }
