@@ -79,6 +79,9 @@ public class Main {
                 boolean redFlag = false;
                 boolean blueFlag = false;
 
+                int rCount = 0;
+                int bCount = 0;
+
                 while(board[nry + dy[d]][nrx + dx[d]] != '#') {
                     nry += dy[d];
                     nrx += dx[d];
@@ -87,6 +90,7 @@ public class Main {
                         redFlag = true;
                         break;
                     }
+                    rCount++;
                 }
 
                 while(board[nby + dy[d]][nbx + dx[d]] != '#') {
@@ -97,35 +101,23 @@ public class Main {
                         blueFlag = true;
                         break;
                     }
+                    bCount++;
                 }
 
                 if (blueFlag) continue;
                 if (redFlag) return 1;
 
                 if (nry == nby && nrx == nbx) {
-                    // 위로 기울일 때
-                    if (d == 0) {
-                        // 빨간 구슬이 위에 있을 경우
-                        if (beads.ry < beads.by) nby -= dy[d];
-                        else nry -= dy[d];
-                    }
-                    // 아래로 기울일 때
-                    else if (d == 1) {
-                        // 빨간 구슬이 아래 있는 경우
-                        if (beads.ry > beads.by) nby -= dy[d];
-                        else nry -= dy[d];
-                    }
-                    // 왼쪽으로 기울일 때
-                    else if(d == 2) {
-                        // 빨간 구슬이 왼쪽에 있는 경우
-                        if (beads.rx < beads.bx) nbx -= dx[d];
-                        else nrx -= dx[d];
+                    if (rCount > bCount) {
+                        nry -= dy[d];
+                        nrx -= dx[d];
                     }
                     else {
-                        if (beads.rx > beads.bx) nbx -= dx[d];
-                        else nrx -= dx[d];
+                        nby -= dy[d];
+                        nbx -= dx[d];
                     }
                 }
+
                 if (!visited[nry][nrx][nby][nbx]) {
                     visited[nry][nrx][nby][nbx] = true;
                     q.offer(new Beads(nry, nrx, nby, nbx, beads.count + 1));
