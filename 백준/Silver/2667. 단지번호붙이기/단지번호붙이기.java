@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static StringTokenizer st;
     static int[] dy = {-1, 1, 0, 0};
     static int[] dx = {0, 0, -1, 1};
     static int N;
 
     public static void main(String[] args) throws IOException {
-        st = new StringTokenizer(br.readLine());
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());   // 도시 개수
         char[][] map = new char[N][N];
         boolean[][] visited = new boolean[N][N];
@@ -31,11 +30,13 @@ public class Main {
                 }
             }
         }
-        System.out.println(answer.size());
+        StringBuilder sb = new StringBuilder();
+        sb.append(answer.size()).append("\n");
         Collections.sort(answer);
-        for (int num : answer) {
-            System.out.println(num);
+        for (int i : answer) {
+            sb.append(i).append("\n");
         }
+        System.out.print(sb);
     }
 
     static int dfs(char[][] map, boolean[][] visited, int y, int x, int count) {
