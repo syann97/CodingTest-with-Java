@@ -9,6 +9,7 @@ public class Main {
     static StringTokenizer st;
     static int N;
     static int K;
+    static int answer;
     public static void main(String[] args) throws IOException {
         st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
@@ -20,23 +21,23 @@ public class Main {
         for (int i = 0; i < N; i++) {
             kits[i] = Integer.parseInt(st.nextToken());
         }
-        System.out.println(bt(kits, new boolean[N], 500, 0));
+        bt(kits, new boolean[N], 500, 0);
+        System.out.println(answer);
     }
 
-    static int bt(int[] kits, boolean[] visited, int weight, int count) {
-        if (count == N) return 1;
+    static void bt(int[] kits, boolean[] visited, int weight, int count) {
+        if (weight < 500) return;
+        if (count == N) {
+            answer++;
+            return;
+        }
 
-        int answer = 0;
         for (int i = 0; i < N; i++) {
             if (!visited[i]) {
-                int nextWeight = weight + kits[i] - K;
-                if (nextWeight >= 500) {
-                    visited[i] = true;
-                    answer += bt(kits, visited, nextWeight, count + 1);
-                    visited[i] = false;
-                }
+                visited[i] = true;
+                bt(kits, visited, weight + kits[i] - K, count + 1);
+                visited[i] = false;
             }
         }
-        return answer;
     }
 }
