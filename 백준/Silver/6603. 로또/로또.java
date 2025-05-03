@@ -6,12 +6,12 @@ import java.util.StringTokenizer;
 public class Main {
     static StringTokenizer st;
     static StringBuilder sb = new StringBuilder();
-
+    static int N;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             st = new StringTokenizer(br.readLine());
-            int N = Integer.parseInt(st.nextToken());
+            N = Integer.parseInt(st.nextToken());
             if (N == 0) break;
 
             int[] lottoNumbers = new int[N];
@@ -35,10 +35,9 @@ public class Main {
             return;
         }
 
-        if (lottoNumbers.length - idx < 6 - count) return;
-
-        selected[count] = lottoNumbers[idx];
-        bt(idx + 1, count + 1, selected, lottoNumbers);
-        bt(idx + 1, count, selected, lottoNumbers);
+        for (int i = idx; i < N; i++) {
+            selected[count] = lottoNumbers[i];
+            bt(i + 1, count + 1, selected, lottoNumbers);
+        }
     }
 }
