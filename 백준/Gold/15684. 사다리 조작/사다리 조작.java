@@ -18,17 +18,20 @@ public class Main {
         H = Integer.parseInt(st.nextToken());
 
         boolean[][] ladder = new boolean[H][N+2];
-        for (int i = 0; i < M; i++) {
-            st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            ladder[a-1][b] = true;
+        if (M == 0) System.out.println(0);
+        else {
+            for (int i = 0; i < M; i++) {
+                st = new StringTokenizer(br.readLine());
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+                ladder[a-1][b] = true;
+            }
+            for (int i = 0; i <= 3; i++) {
+                bt(0, i, 0, 1, ladder);
+                if (answer != -1) break;
+            }
+            System.out.println(answer);
         }
-        for (int i = 0; i <= 3; i++) {
-            bt(0, i, 0, 1, ladder);
-            if (answer != -1) break;
-        }
-        System.out.println(answer);
     }
 
     static void bt(int n, int limit, int sy, int sx, boolean[][] ladder) {
