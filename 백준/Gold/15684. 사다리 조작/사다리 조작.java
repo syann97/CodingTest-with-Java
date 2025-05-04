@@ -33,10 +33,9 @@ public class Main {
 
     static void bt(int n, int limit, int sy, int sx, boolean[][] ladder) {
         if (answer != -1) return;
-        if (n > limit) return;
 
-        if (isSatisfy(ladder)) {
-            answer = n;
+        if (n == limit) {
+            if (isSatisfy(ladder)) answer = n;
             return;
         }
 
@@ -44,7 +43,7 @@ public class Main {
             for (int j = (i == sy ? sx : 1); j < N; j++) {
                 if (!ladder[i][j-1] && !ladder[i][j] && !ladder[i][j+1]) {
                     ladder[i][j] = true;
-                    bt(n+1, limit, i, j + 2, ladder);
+                    bt(n + 1, limit, i, j + 2, ladder);
                     ladder[i][j] = false;
                 }
             }
