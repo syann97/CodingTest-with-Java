@@ -16,7 +16,7 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         H = Integer.parseInt(st.nextToken());
-        
+
         boolean[][] ladder = new boolean[H][N+2];
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
@@ -24,23 +24,27 @@ public class Main {
             int b = Integer.parseInt(st.nextToken());
             ladder[a-1][b] = true;
         }
-        bt(0, 0, ladder);
+        for (int i = 0; i <= 3; i++) {
+            bt(0, i, 0, 1, ladder);
+            if (answer != -1) break;
+        }
         System.out.println(answer);
     }
 
-    static void bt(int n, int sy, boolean[][] ladder) {
-        if (n > 3) return;
-        
+    static void bt(int n, int limit, int sy, int sx, boolean[][] ladder) {
+        if (answer != -1) return;
+        if (n > limit) return;
+
         if (isSatisfy(ladder)) {
-            answer = answer == -1 ? n : Math.min(answer, n);
+            answer = n;
             return;
         }
-        
+
         for (int i = sy; i < H; i++) {
-            for (int j = 1; j < N; j++) {
+            for (int j = (i == sy ? sx : 1); j < N; j++) {
                 if (!ladder[i][j-1] && !ladder[i][j] && !ladder[i][j+1]) {
                     ladder[i][j] = true;
-                    bt(n+1, i, ladder);
+                    bt(n+1, limit, i, j + 2, ladder);
                     ladder[i][j] = false;
                 }
             }
