@@ -4,6 +4,17 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
+
+class CurrentBoard {
+    int[][] board;
+    int max;
+
+    public CurrentBoard(int[][] board, int max) {
+        this.board = board;
+        this.max = max;
+    }
+}
+
 public class Main {
     static StringTokenizer st;
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,142 +29,152 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
                 board[i][j] = Integer.parseInt(st.nextToken());
+                max = Math.max(max, board[i][j]);
             }
         }
 
-        bf(0, board);
+
+        bf(0, new CurrentBoard(board, max));
         System.out.println(max);
     }
 
-    static void bf(int n, int[][] board) {
+    static void bf(int n, CurrentBoard current) {
         if (n == 5) {
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < N; j++) {
-                    max = Math.max(max, board[i][j]);
-                }
-            }
+            max = Math.max(max, current.max);
             return;
         }
 
-        bf(n + 1, up(copyBoard(board)));
-        bf(n + 1, down(copyBoard(board)));
-        bf(n + 1, left(copyBoard(board)));
-        bf(n + 1, right(copyBoard(board)));
+        bf(n + 1, up(copyBoard(current)));
+        bf(n + 1, down(copyBoard(current)));
+        bf(n + 1, left(copyBoard(current)));
+        bf(n + 1, right(copyBoard(current)));
     }
 
-    static int[][] copyBoard(int[][] board) {
+    static CurrentBoard copyBoard(CurrentBoard current) {
         int[][] copyBoard = new int[N][N];
         for (int i = 0; i < N; i++){
-            copyBoard[i] = Arrays.copyOf(board[i], N);
+            copyBoard[i] = Arrays.copyOf(current.board[i], N);
         }
-        return copyBoard;
+        return new CurrentBoard(copyBoard, current.max);
     }
 
-    static int[][] up (int[][] board) {
+    static CurrentBoard up (CurrentBoard current) {
         for (int j = 0; j < N; j++) {
             int pointer = 0;
             for (int i = 1; i < N; i++) {
-                if (board[i][j] == 0) continue;
+                if (current.board[i][j] == 0) continue;
 
-                int now = board[i][j];
-                board[i][j] = 0;
+                int now = current.board[i][j];
+                current.board[i][j] = 0;
 
-                if (board[pointer][j] == 0) {
-                    board[pointer][j] = now;
+                if (current.board[pointer][j] == 0) {
+                    current.board[pointer][j] = now;
+                    current.max = Math.max(current.max, now);
                 }
                 else {
-                    if (board[pointer][j] == now) {
-                        board[pointer][j] *= 2;
+                    if (current.board[pointer][j] == now) {
+                        current.board[pointer][j] *= 2;
+                        current.max = Math.max(current.max, now * 2);
                         pointer++;
                     }
                     else {
                         pointer++;
-                        board[pointer][j] = now;
+                        current.board[pointer][j] = now;
+                        current.max = Math.max(current.max, now);
                     }
                 }
             }
         }
-        return board;
+        return current;
     }
 
-    static int[][] down (int[][] board) {
+    static CurrentBoard down (CurrentBoard current) {
         for (int j = 0; j < N; j++) {
             int pointer = N-1;
             for (int i = N-2; i >= 0; i--) {
-                if (board[i][j] == 0) continue;
+                if (current.board[i][j] == 0) continue;
 
-                int now = board[i][j];
-                board[i][j] = 0;
+                int now = current.board[i][j];
+                current.board[i][j] = 0;
 
-                if (board[pointer][j] == 0) {
-                    board[pointer][j] = now;
+                if (current.board[pointer][j] == 0) {
+                    current.board[pointer][j] = now;
+                    current.max = Math.max(current.max, now);
                 }
                 else {
-                    if (board[pointer][j] == now) {
-                        board[pointer][j] *= 2;
+                    if (current.board[pointer][j] == now) {
+                        current.board[pointer][j] *= 2;
+                        current.max = Math.max(current.max, now * 2);
                         pointer--;
                     }
                     else {
                         pointer--;
-                        board[pointer][j] = now;
+                        current.board[pointer][j] = now;
+                        current.max = Math.max(current.max, now);
                     }
                 }
             }
         }
-        return board;
+        return current;
     }
 
-    static int[][] left (int[][] board) {
+    static CurrentBoard left (CurrentBoard current) {
         for (int i = 0; i < N; i++) {
             int pointer = 0;
             for (int j = 1; j < N; j++) {
-                if (board[i][j] == 0) continue;
+                if (current.board[i][j] == 0) continue;
 
-                int now = board[i][j];
-                board[i][j] = 0;
+                int now = current.board[i][j];
+                current.board[i][j] = 0;
 
-                if (board[i][pointer] == 0) {
-                    board[i][pointer] = now;
+                if (current.board[i][pointer] == 0) {
+                    current.board[i][pointer] = now;
+                    current.max = Math.max(current.max, now);
                 }
                 else {
-                    if (board[i][pointer] == now) {
-                        board[i][pointer] *= 2;
+                    if (current.board[i][pointer] == now) {
+                        current.board[i][pointer] *= 2;
+                        current.max = Math.max(current.max, now * 2);
                         pointer++;
                     }
                     else {
                         pointer++;
-                        board[i][pointer] = now;
+                        current.board[i][pointer] = now;
+                        current.max = Math.max(current.max, now);
                     }
                 }
             }
         }
-        return board;
+        return current;
     }
 
-    static int[][] right (int[][] board) {
+    static CurrentBoard right (CurrentBoard current) {
         for (int i = 0; i < N; i++) {
             int pointer = N-1;
             for (int j = N-2; j >= 0; j--) {
-                if (board[i][j] == 0) continue;
+                if (current.board[i][j] == 0) continue;
 
-                int now = board[i][j];
-                board[i][j] = 0;
+                int now = current.board[i][j];
+                current.board[i][j] = 0;
 
-                if (board[i][pointer] == 0) {
-                    board[i][pointer] = now;
+                if (current.board[i][pointer] == 0) {
+                    current.board[i][pointer] = now;
+                    current.max = Math.max(current.max, now);
                 }
                 else {
-                    if (board[i][pointer] == now) {
-                        board[i][pointer] *= 2;
+                    if (current.board[i][pointer] == now) {
+                        current.board[i][pointer] *= 2;
+                        current.max = Math.max(current.max, now * 2);
                         pointer--;
                     }
                     else {
                         pointer--;
-                        board[i][pointer] = now;
+                        current.board[i][pointer] = now;
+                        current.max = Math.max(current.max, now);
                     }
                 }
             }
         }
-        return board;
+        return current;
     }
 }
