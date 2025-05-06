@@ -21,6 +21,7 @@ public class Main {
     static int N;
     static int max = 0;
 
+
     public static void main(String[] args) throws IOException {
         N = Integer.parseInt(br.readLine());
         int[][] board = new int[N][N];
@@ -43,6 +44,9 @@ public class Main {
             max = Math.max(max, current.max);
             return;
         }
+
+        int maxPossible = current.max * (1 << (5 - n));
+        if (maxPossible <= max) return;
 
         bf(n + 1, up(copyBoard(current)));
         bf(n + 1, down(copyBoard(current)));
