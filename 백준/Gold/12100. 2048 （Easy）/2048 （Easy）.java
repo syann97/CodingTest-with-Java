@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 
-class CurrentBoard {
+class BoardState {
     int[][] board;
     int max;
 
-    public CurrentBoard(int[][] board, int max) {
+    public BoardState(int[][] board, int max) {
         this.board = board;
         this.max = max;
     }
@@ -35,11 +35,11 @@ public class Main {
         }
 
 
-        bf(0, new CurrentBoard(board, max));
+        bt(0, new BoardState(board, max));
         System.out.println(max);
     }
 
-    static void bf(int n, CurrentBoard current) {
+    static void bt(int n, BoardState current) {
         if (n == 5) {
             max = Math.max(max, current.max);
             return;
@@ -48,137 +48,158 @@ public class Main {
         int maxPossible = current.max * (1 << (5 - n));
         if (maxPossible <= max) return;
 
-        bf(n + 1, up(copyBoard(current)));
-        bf(n + 1, down(copyBoard(current)));
-        bf(n + 1, left(copyBoard(current)));
-        bf(n + 1, right(copyBoard(current)));
+        BoardState[] nextBoard = new BoardState[4];
+        nextBoard[0] = up(current);
+        nextBoard[1] = down(current);
+        nextBoard[2] = left(current);
+        nextBoard[3] = right(current);
+
+        for (BoardState board : nextBoard) {
+            if (board != null) bt(n + 1, board);
+        }
     }
 
-    static CurrentBoard copyBoard(CurrentBoard current) {
+    static BoardState copyBoard(BoardState current) {
         int[][] copyBoard = new int[N][N];
         for (int i = 0; i < N; i++){
             copyBoard[i] = Arrays.copyOf(current.board[i], N);
         }
-        return new CurrentBoard(copyBoard, current.max);
+        return new BoardState(copyBoard, current.max);
     }
 
-    static CurrentBoard up (CurrentBoard current) {
+    static BoardState up (BoardState current) {
+        BoardState copy = copyBoard(current);
+        boolean moved = false;
+
         for (int j = 0; j < N; j++) {
             int pointer = 0;
             for (int i = 1; i < N; i++) {
-                if (current.board[i][j] == 0) continue;
+                if (copy.board[i][j] == 0) continue;
 
-                int now = current.board[i][j];
-                current.board[i][j] = 0;
+                int now = copy.board[i][j];
+                copy.board[i][j] = 0;
 
-                if (current.board[pointer][j] == 0) {
-                    current.board[pointer][j] = now;
-                    current.max = Math.max(current.max, now);
+                if (copy.board[pointer][j] == 0) {
+                    copy.board[pointer][j] = now;
+                    if (pointer != i) moved = true;
                 }
                 else {
-                    if (current.board[pointer][j] == now) {
-                        current.board[pointer][j] *= 2;
-                        current.max = Math.max(current.max, now * 2);
+                    if (copy.board[pointer][j] == now) {
+                        copy.board[pointer][j] *= 2;
+                        copy.max = Math.max(copy.max, now * 2);
+                        moved = true;
                         pointer++;
                     }
                     else {
                         pointer++;
-                        current.board[pointer][j] = now;
-                        current.max = Math.max(current.max, now);
+                        if (pointer != i) moved = true;
+                        copy.board[pointer][j] = now;
                     }
                 }
             }
         }
-        return current;
+        return moved ? copy : null;
     }
 
-    static CurrentBoard down (CurrentBoard current) {
+    static BoardState down (BoardState current) {
+        BoardState copy = copyBoard(current);
+        boolean moved = false;
+
         for (int j = 0; j < N; j++) {
             int pointer = N-1;
             for (int i = N-2; i >= 0; i--) {
-                if (current.board[i][j] == 0) continue;
+                if (copy.board[i][j] == 0) continue;
 
-                int now = current.board[i][j];
-                current.board[i][j] = 0;
+                int now = copy.board[i][j];
+                copy.board[i][j] = 0;
 
-                if (current.board[pointer][j] == 0) {
-                    current.board[pointer][j] = now;
-                    current.max = Math.max(current.max, now);
+                if (copy.board[pointer][j] == 0) {
+                    copy.board[pointer][j] = now;
+                    if (pointer != i) moved = true;
                 }
                 else {
-                    if (current.board[pointer][j] == now) {
-                        current.board[pointer][j] *= 2;
-                        current.max = Math.max(current.max, now * 2);
+                    if (copy.board[pointer][j] == now) {
+                        copy.board[pointer][j] *= 2;
+                        copy.max = Math.max(copy.max, now * 2);
+                        moved = true;
                         pointer--;
                     }
                     else {
                         pointer--;
-                        current.board[pointer][j] = now;
-                        current.max = Math.max(current.max, now);
+                        copy.board[pointer][j] = now;
+                        if (pointer != i) moved = true;
                     }
                 }
             }
         }
-        return current;
+        return moved ? copy : null;
     }
 
-    static CurrentBoard left (CurrentBoard current) {
+    static BoardState left (BoardState current) {
+        BoardState copy = copyBoard(current);
+        boolean moved = false;
+
         for (int i = 0; i < N; i++) {
             int pointer = 0;
             for (int j = 1; j < N; j++) {
-                if (current.board[i][j] == 0) continue;
+                if (copy.board[i][j] == 0) continue;
 
-                int now = current.board[i][j];
-                current.board[i][j] = 0;
+                int now = copy.board[i][j];
+                copy.board[i][j] = 0;
 
-                if (current.board[i][pointer] == 0) {
-                    current.board[i][pointer] = now;
-                    current.max = Math.max(current.max, now);
+                if (copy.board[i][pointer] == 0) {
+                    copy.board[i][pointer] = now;
+                    if (pointer != j) moved = true;
                 }
                 else {
-                    if (current.board[i][pointer] == now) {
-                        current.board[i][pointer] *= 2;
-                        current.max = Math.max(current.max, now * 2);
+                    if (copy.board[i][pointer] == now) {
+                        copy.board[i][pointer] *= 2;
+                        copy.max = Math.max(copy.max, now * 2);
+                        moved = true;
                         pointer++;
                     }
                     else {
                         pointer++;
-                        current.board[i][pointer] = now;
-                        current.max = Math.max(current.max, now);
+                        copy.board[i][pointer] = now;
+                        if (pointer != j) moved = true;
                     }
                 }
             }
         }
-        return current;
+        return moved ? copy : null;
     }
 
-    static CurrentBoard right (CurrentBoard current) {
+    static BoardState right (BoardState current) {
+        BoardState copy = copyBoard(current);
+        boolean moved = false;
+
         for (int i = 0; i < N; i++) {
             int pointer = N-1;
             for (int j = N-2; j >= 0; j--) {
-                if (current.board[i][j] == 0) continue;
+                if (copy.board[i][j] == 0) continue;
 
-                int now = current.board[i][j];
-                current.board[i][j] = 0;
+                int now = copy.board[i][j];
+                copy.board[i][j] = 0;
 
-                if (current.board[i][pointer] == 0) {
-                    current.board[i][pointer] = now;
-                    current.max = Math.max(current.max, now);
+                if (copy.board[i][pointer] == 0) {
+                    copy.board[i][pointer] = now;
+                    if (pointer != j) moved = true;
                 }
                 else {
-                    if (current.board[i][pointer] == now) {
-                        current.board[i][pointer] *= 2;
-                        current.max = Math.max(current.max, now * 2);
+                    if (copy.board[i][pointer] == now) {
+                        copy.board[i][pointer] *= 2;
+                        copy.max = Math.max(copy.max, now * 2);
+                        moved = true;
                         pointer--;
                     }
                     else {
                         pointer--;
-                        current.board[i][pointer] = now;
-                        current.max = Math.max(current.max, now);
+                        copy.board[i][pointer] = now;
+                        if (pointer != j) moved = true;
                     }
                 }
             }
         }
-        return current;
+        return moved ? copy : null;
     }
 }
