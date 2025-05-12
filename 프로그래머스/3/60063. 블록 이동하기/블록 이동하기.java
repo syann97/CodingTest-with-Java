@@ -18,14 +18,11 @@ class Drone {
 class Solution {
     static int[] dy = {-1, 1, 0, 0};
     static int[] dx = {0, 0, -1, 1};
-    static int[] dyVtoH = {0, 0, 1, 1};   // 현재 y, 아래쪽
-    static int[] dxVtoH = {-1, 1, -1, 1}; // 왼쪽, 오른쪽
+    static int[] dyVtoH = {0, 0, 1, 1};
+    static int[] dxVtoH = {-1, 1, -1, 1};
  
     
     public int solution(int[][] board) {
-        int answer = 0;
-        
-        
         return bfs(board);
     }
     
