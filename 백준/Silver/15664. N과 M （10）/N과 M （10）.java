@@ -25,11 +25,11 @@ public class Main {
             nums[i] = Integer.parseInt(st.nextToken());
         }
         Arrays.sort(nums);
-        dfs(0, 0, nums, new int[M]);
+        bt(0, 0, nums, new int[M]);
         System.out.print(sb);
     }
 
-    static void dfs(int n, int start, int[] nums, int[] answer) {
+    static void bt(int n, int start, int[] nums, int[] answer) {
         if (n == M) {
             for (int i = 0; i < M; i++) {
                 sb.append(answer[i]).append(" ");
@@ -43,7 +43,7 @@ public class Main {
             if (now == nums[i]) continue;
             now = nums[i];
             answer[n] = nums[i];
-            dfs(n + 1, i + 1, nums, answer);
+            bt(n + 1, i + 1, nums, answer);
         }
     }
 }
