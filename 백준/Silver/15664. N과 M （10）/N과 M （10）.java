@@ -25,20 +25,25 @@ public class Main {
             nums[i] = Integer.parseInt(st.nextToken());
         }
         Arrays.sort(nums);
-        dfs(0, 0, nums, "");
-        System.out.println(sb);
+        dfs(0, 0, nums, new int[M]);
+        System.out.print(sb);
     }
 
-    static void dfs(int n, int idx, int[] nums, String str) {
+    static void dfs(int n, int start, int[] nums, int[] answer) {
         if (n == M) {
-            if (!set.contains(str)) {
-                sb.append(str).append('\n');
-                set.add(str);
+            for (int i = 0; i < M; i++) {
+                sb.append(answer[i]).append(" ");
             }
+            sb.append("\n");
+            return;
         }
 
-        for (int i = idx; i < nums.length; i++) {
-            dfs(n + 1, i + 1, nums, str + nums[i] + " ");
+        int now = 0;
+        for (int i = start; i < nums.length; i++) {
+            if (now == nums[i]) continue;
+            now = nums[i];
+            answer[n] = nums[i];
+            dfs(n + 1, i + 1, nums, answer);
         }
     }
 }
