@@ -25,14 +25,21 @@ public class Main {
     }
 
     static void bt(int[][] square, int sy, int sx, int total, boolean[] used) {
+        if (total >= min) return;
+
+        if (sy > 0 && sx == 0) {
+            if (!checkRow(square, sy - 1)) return;
+        }
+        if (sx > 0 && sy == 2) {
+            if (!checkCol(square, sx - 1)) return;
+        }
+
         if (sy == 3) {
-            if (isMagicSquare(square)) {
+            if (checkDiagonal(square)) {
                 min = Math.min(min, total);
             }
             return;
         }
-
-        if (total >= min) return;
 
         int ny = sx + 1 == 3 ? sy + 1 : sy;
         int nx = sx + 1 == 3 ? 0 : sx + 1;
@@ -52,25 +59,17 @@ public class Main {
     }
 
 
-    static boolean isMagicSquare(int[][] square) {
-        int diagonal_left = 0;
-        int diagonal_right = 0;
-        int[] cols = {0, 0, 0};
-        int[] rows = {0, 0, 0};
+    static boolean checkDiagonal(int[][] square) {
+        int diagonal_left = square[0][0] + square[1][1] + square[2][2];
+        int diagonal_right = square[0][2] + square[1][1] + square[2][0];
+        return (diagonal_left == 15 && diagonal_right == 15);
+    }
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                rows[i] += square[i][j];
-                cols[j] += square[i][j];
-                if (i == j) diagonal_left += square[i][j];
-                if (i + j == 2) diagonal_right += square[i][j];
-            }
-        }
+    static boolean checkRow(int[][] square, int row) {
+        return square[row][0] + square[row][1] + square[row][2] == 15;
+    }
 
-        if (diagonal_left != 15) return false;
-        if (diagonal_right != 15) return false;
-        for (int i = 0; i < 3; i++) if (cols[i] != 15 || rows[i] != 15) return false;
-
-        return true;
+    static boolean checkCol(int[][] square, int col) {
+        return square[0][col] + square[1][col] + square[2][col] == 15;
     }
 }
