@@ -1,13 +1,11 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 public class Main {
-    static StringTokenizer st;
     static boolean[][] row = new boolean[9][10];
     static boolean[][] col = new boolean[9][10];
-    static boolean[][] partition = new boolean[9][10];
+    static boolean[][] subBoard = new boolean[9][10];
     static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,7 +18,7 @@ public class Main {
                 if (board[i][j] != 0) {
                     row[i][board[i][j]] = true;
                     col[j][board[i][j]] = true;
-                    partition[((i/3)*3+(j/3))][board[i][j]] = true;
+                    subBoard[((i/3)*3+(j/3))][board[i][j]] = true;
                 }
             }
         }
@@ -45,17 +43,17 @@ public class Main {
 
         if (board[y][x] == 0) {
             for (int k = 1; k <= 9; k++) {
-                if (!row[y][k] && !col[x][k] && !partition[((y/3)*3+(x/3))][k]) {
+                if (!row[y][k] && !col[x][k] && !subBoard[((y/3)*3+(x/3))][k]) {
                     row[y][k] = true;
                     col[x][k] = true;
-                    partition[((y/3)*3+(x/3))][k] = true;
+                    subBoard[((y/3)*3+(x/3))][k] = true;
                     board[y][x] = k;
 
                     if (bt(ny, nx, board)) return true;
 
                     row[y][k] = false;
                     col[x][k] = false;
-                    partition[((y/3)*3+(x/3))][k] = false;
+                    subBoard[((y/3)*3+(x/3))][k] = false;
                     board[y][x] = 0;
 
                 }
