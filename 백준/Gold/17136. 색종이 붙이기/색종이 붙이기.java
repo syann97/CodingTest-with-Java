@@ -29,6 +29,8 @@ public class Main {
             return;
         }
 
+        if (count >= min) return;
+
         int ny = x + 1 == 10 ? y + 1 : y;
         int nx = x + 1 == 10 ? 0 : x + 1;
 
@@ -43,7 +45,7 @@ public class Main {
                     }
                     paperCount[idx]--;
 
-                    bfs(ny, nx, area, paperCount, count + 1); // deepcopy area
+                    bfs(ny, nx, area, paperCount, count + 1);
 
                     for (int row = y; row < y + paperSize[idx]; row++) {
                         for (int col = x; col < x + paperSize[idx]; col++) {
