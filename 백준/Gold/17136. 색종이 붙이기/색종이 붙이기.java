@@ -6,7 +6,6 @@ import java.util.StringTokenizer;
 public class Main {
     static StringTokenizer st;
     static int min = 26;
-    static int[] paperSize = {1, 2, 3, 4, 5};
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int[][] area = new int[10][10];
@@ -18,7 +17,7 @@ public class Main {
             }
         }
 
-        bfs(0, 0, area, new int[]{5, 5, 5, 5, 5}, 0);
+        bfs(0, 0, area, new int[]{0, 5, 5, 5, 5, 5}, 0);
         System.out.println(min == 26 ? -1 : min);
     }
 
@@ -36,23 +35,23 @@ public class Main {
 
         if (area[y][x] == 1) {
             int maxSize = checkPossibleSize(y, x, area);
-            for (int idx = 0; idx < 5; idx++) {
-                if (paperSize[idx] <= maxSize && paperCount[idx] > 0) {
-                    for (int row = y; row < y + paperSize[idx]; row++) {
-                        for (int col = x; col < x + paperSize[idx]; col++) {
+            for (int size = 5; size >= 1; size--) {
+                if (size <= maxSize && paperCount[size] > 0) {
+                    for (int row = y; row < y + size; row++) {
+                        for (int col = x; col < x + size; col++) {
                             area[row][col] = 0;
                         }
                     }
-                    paperCount[idx]--;
+                    paperCount[size]--;
 
                     bfs(ny, nx, area, paperCount, count + 1);
 
-                    for (int row = y; row < y + paperSize[idx]; row++) {
-                        for (int col = x; col < x + paperSize[idx]; col++) {
+                    for (int row = y; row < y + size; row++) {
+                        for (int col = x; col < x + size; col++) {
                             area[row][col] = 1;
                         }
                     }
-                    paperCount[idx]++;
+                    paperCount[size]++;
                 }
             }
         }
