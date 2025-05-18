@@ -13,19 +13,19 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        int[][] area = new int[N][N];
+        boolean[][] area = new boolean[N][N];
         int[][][] dp = new int[3][N][N];
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
-                area[i][j] = Integer.parseInt(st.nextToken());
+                area[i][j] = st.nextToken().equals("1");
             }
         }
         dp[1][0][1] = 1;
 
         for(int y = 0; y < N; y++) {
-            for (int x = 0; x < N; x++) {
+            for (int x = 1; x < N; x++) {
                 // diagonal : 0, horizontal : 1, vertical : 2;
                 for (int d = 0; d < 3; d++) {
                     if(dp[d][y][x] == 0) continue;
@@ -35,7 +35,7 @@ public class Main {
                         for (int cd : checks[nd]) {
                             int checkY = y + dy[cd];
                             int checkX = x + dx[cd];
-                            if (checkY < 0 || checkY >= N || checkX < 0 || checkX >= N || area[checkY][checkX] == 1) {
+                            if (checkY < 0 || checkY >= N || checkX < 0 || checkX >= N || area[checkY][checkX]) {
                                 isPossible = false;
                                 break;
                             }
@@ -48,3 +48,4 @@ public class Main {
         System.out.println(dp[0][N-1][N-1] + dp[1][N-1][N-1] + dp[2][N-1][N-1]);
     }
 }
+
