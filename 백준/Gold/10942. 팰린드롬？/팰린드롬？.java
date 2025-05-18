@@ -21,9 +21,14 @@ public class Main {
         for (int end = 1; end <= N; end++) {
             dp[end][end] = 1;
             for (int start = end - 1; start >= 1; start--) {
-                int length = end - start + 1;
-                if (length == 2) dp[start][end] = numbers[start] == numbers[end] ? 1 : 0;
-                else dp[start][end] = numbers[start] == numbers[end] && dp[start+1][end-1] == 1 ? 1 : 0 ;
+                if (end - start + 1 == 2) {
+                    if (numbers[start] == numbers[end]) dp[start][end] = 1;
+                    else dp[start][end] = 0;
+                }
+                else {
+                    if (numbers[start] == numbers[end] && dp[start+1][end-1] == 1) dp[start][end] = 1;
+                    else dp[start][end] = 0;
+                }
             }
         }
 
