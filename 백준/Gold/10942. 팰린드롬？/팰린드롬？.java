@@ -21,7 +21,9 @@ public class Main {
         for (int end = 1; end <= N; end++) {
             dp[end][end] = 1;
             for (int start = end - 1; start >= 1; start--) {
-                dp[start][end] = isPalindrome(start, end, numbers);
+                int length = end - start + 1;
+                if (length == 2) dp[start][end] = numbers[start] == numbers[end] ? 1 : 0;
+                else dp[start][end] = numbers[start] == numbers[end] && dp[start+1][end-1] == 1 ? 1 : 0 ;
             }
         }
 
@@ -33,17 +35,6 @@ public class Main {
             int end = Integer.parseInt(st.nextToken());
             sb.append(dp[start][end]).append("\n");
         }
-        System.out.println(sb);
-    }
-
-    static int isPalindrome(int start, int end, int[] numbers) {
-        int length = (end - start + 1) / 2;
-
-        while (length --> 0) {
-            if (numbers[start] != numbers[end]) return 0;
-            start++;
-            end--;
-        }
-        return 1;
+        System.out.print(sb);
     }
 }
