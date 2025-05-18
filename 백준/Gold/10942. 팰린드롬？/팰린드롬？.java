@@ -10,7 +10,7 @@ public class Main {
         StringBuilder sb = new StringBuilder();
         int N = Integer.parseInt(br.readLine());
         int[] numbers = new int[N+1];
-        int[][] dp = new int[N+1][N+1];
+        boolean[][] dp = new boolean[N+1][N+1];
 
 
         st = new StringTokenizer(br.readLine());
@@ -19,15 +19,13 @@ public class Main {
         }
 
         for (int end = 1; end <= N; end++) {
-            dp[end][end] = 1;
+            dp[end][end] = true;
             for (int start = end - 1; start >= 1; start--) {
                 if (end - start + 1 == 2) {
-                    if (numbers[start] == numbers[end]) dp[start][end] = 1;
-                    else dp[start][end] = 0;
+                    if (numbers[start] == numbers[end]) dp[start][end] = true;
                 }
                 else {
-                    if (numbers[start] == numbers[end] && dp[start+1][end-1] == 1) dp[start][end] = 1;
-                    else dp[start][end] = 0;
+                    if (numbers[start] == numbers[end] && dp[start+1][end-1]) dp[start][end] = true;
                 }
             }
         }
@@ -38,7 +36,7 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int start = Integer.parseInt(st.nextToken());
             int end = Integer.parseInt(st.nextToken());
-            sb.append(dp[start][end]).append("\n");
+            sb.append(dp[start][end] ? 1 : 0).append("\n");
         }
         System.out.print(sb);
     }
