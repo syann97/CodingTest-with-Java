@@ -23,15 +23,20 @@ public class Main {
 
         int answer = INF;
         for (int color = 0; color < 3; color++) {
-            Arrays.fill(dp[0], INF);
-            dp[0][color] = cost[0][color];
+            for (int idx = 0; idx < 3; idx++) {
+                if (color == idx) dp[0][idx] = cost[0][idx];
+                else dp[0][idx] = INF;
+            }
+            
             for (int step = 1; step < N; step++) {
                 dp[step][0] = Math.min(dp[step-1][1], dp[step-1][2]) + cost[step][0];
                 dp[step][1] = Math.min(dp[step-1][0], dp[step-1][2]) + cost[step][1];
                 dp[step][2] = Math.min(dp[step-1][0], dp[step-1][1]) + cost[step][2];
             }
-            dp[N-1][color] = INF;
-            for (int i = 0; i < 3; i++) answer = Math.min(answer, dp[N-1][i]);
+            
+            for (int idx = 0; idx < 3; idx++) {
+                if (idx != color) answer = Math.min(answer, dp[N-1][idx]); 
+            }
         }
         System.out.println(answer);
     }
