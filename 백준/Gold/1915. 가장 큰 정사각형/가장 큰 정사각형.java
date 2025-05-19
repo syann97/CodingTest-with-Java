@@ -17,17 +17,12 @@ public class Main {
         for (int i = 1; i <= N; i++) {
             String tmp = br.readLine();
             for (int j = 1; j <= M; j++) {
-                dp[i][j] = tmp.charAt(j-1) - '0';
-            }
-        }
-
-        for (int i = 1; i <= N; i++) {
-            for (int j = 1; j <= M; j++) {
-                if (dp[i][j] == 0) continue;
+                if (tmp.charAt(j-1) - '0' == 0) continue;
                 dp[i][j] = Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1])) + 1;
                 answer = Math.max(answer, dp[i][j]);
             }
         }
+        
         System.out.println(answer * answer);
     }
 }
