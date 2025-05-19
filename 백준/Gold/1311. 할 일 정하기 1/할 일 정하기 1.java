@@ -1,39 +1,84 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
+// 학습용 --> 헝가리안 알고리즘
 public class Main {
-    static StringTokenizer st;
-    static int INF = 200001;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        int[][] cost = new int[N][N];
-        int[][] dp = new int[N][1 << N];
+    static final int INF = Integer.MAX_VALUE;
+    static int N;
+    static int[][] cost;
+    static int[] u, v, p, way;
+    static int[] minv;
+    static boolean[] used;
 
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            Arrays.fill(dp[i], INF);
-            for (int j = 0; j < N; j++) {
+    public static void main(String[] args) throws IOException {
+        // 입력 준비
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        cost = new int[N + 1][N + 1]; // 1-based indexing
+
+        for (int i = 1; i <= N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 1; j <= N; j++) {
                 cost[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
-        for (int k = 0; k < N; k++) {
-            dp[0][1 << k] = cost[0][k];
+        System.out.println(hungarian());
+    }
+
+    static int hungarian() {
+        u = new int[N + 1];
+        v = new int[N + 1];
+        p = new int[N + 1];
+        way = new int[N + 1];
+
+        for (int i = 1; i <= N; i++) {
+            p[0] = i;
+            int j0 = 0;
+            minv = new int[N + 1];
+            used = new boolean[N + 1];
+            Arrays.fill(minv, INF);
+
+            do {
+                used[j0] = true;
+                int i0 = p[j0];
+                int delta = INF;
+                int j1 = 0;
+
+                for (int j = 1; j <= N; j++) {
+                    if (!used[j]) {
+                        int cur = cost[i0][j] - u[i0] - v[j];
+                        if (cur < minv[j]) {
+                            minv[j] = cur;
+                            way[j] = j0;
+                        }
+                        if (minv[j] < delta) {
+                            delta = minv[j];
+                            j1 = j;
+                        }
+                    }
+                }
+
+                for (int j = 0; j <= N; j++) {
+                    if (used[j]) {
+                        u[p[j]] += delta;
+                        v[j] -= delta;
+                    } else {
+                        minv[j] -= delta;
+                    }
+                }
+                j0 = j1;
+            } while (p[j0] != 0);
+
+            // Augmenting path backtracking
+            do {
+                int j1 = way[j0];
+                p[j0] = p[j1];
+                j0 = j1;
+            } while (j0 != 0);
         }
 
-        for (int i = 1; i < N; i++) {
-            for (int j = 0; j < (1 << N); j++) {
-                if (dp[i-1][j] == INF) continue;
-                for (int k = 0; k < N; k++) {
-                    if ((j & (1 << k)) != 0) continue;
-                    dp[i][j|(1<<k)] = Math.min(dp[i][j|(1<<k)], dp[i-1][j] + cost[i][k]);
-                }
-            }
-        }
-        System.out.println(dp[N-1][(1<<N)-1]);
+        // 최소 비용은 -v[0]에 저장됨
+        return -v[0];
     }
 }
