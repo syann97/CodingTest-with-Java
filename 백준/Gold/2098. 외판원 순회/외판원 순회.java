@@ -8,13 +8,15 @@ public class Main {
     static StringTokenizer st;
     static final int INF = 100000000;
     static int FULL_MASK;
-    static int[][] dp;
     static int N;
+    static int[][] W;
+    static int[][] dp;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        FULL_MASK = (1 << N);
-        int[][] W = new int[N][N];
+        W = new int[N][N];
+        FULL_MASK = 1 << N;
         dp = new int[FULL_MASK][N];
 
         for (int i = 0; i < N; i++) {
@@ -23,26 +25,26 @@ public class Main {
                 W[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        for (int i = 0; i < FULL_MASK; i++) {
-            Arrays.fill(dp[i], -1);
-        }
-        System.out.println(tsp(1, 0, W));
+
+        for (int i = 0; i < FULL_MASK; i++) Arrays.fill(dp[i], -1);
+        System.out.println(tsp(1, 0));
     }
 
-    private static int tsp(int mask, int city, int[][] W) {
+    private static int tsp(int mask, int city) {
         if (mask == FULL_MASK - 1) {
             if (W[city][0] == 0) return INF;
             return W[city][0];
         }
 
-        if(dp[mask][city] != -1) return dp[mask][city];
+        if (dp[mask][city] != -1) return dp[mask][city];
         dp[mask][city] = INF;
 
         for (int k = 0; k < N; k++) {
             if ((mask & (1 << k)) != 0 || W[city][k] == 0) continue;
-            int next = mask | (1 << k);
-            dp[mask][city] = Math.min(dp[mask][city], tsp(next, k, W) + W[city][k]);
+            int next_mask = mask | (1 << k);
+            dp[mask][city] = Math.min(dp[mask][city], tsp(next_mask, k) + W[city][k]);
         }
+
         return dp[mask][city];
     }
 }
