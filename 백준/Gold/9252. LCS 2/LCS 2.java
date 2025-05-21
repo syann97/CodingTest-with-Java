@@ -27,18 +27,17 @@ public class Main {
     static void traceLCS(int y, int x, int[][] dp, String str) {
         StringBuilder sb = new StringBuilder();
         while (y > 0 && x > 0) {
-            if (dp[y][x] != dp[y-1][x]) {
+            if (dp[y][x] == dp[y][x-1]) {
+                x--;
+            }
+            else if (dp[y][x] == dp[y-1][x]) {
+                y--;
+            }
+            else {
                 sb.append(str.charAt(y));
                 x--;
                 y--;
             }
-            else if (dp[y][x] == dp[y][x-1]) {
-                x--;
-            }
-            else {
-                y--;
-            }
-
         }
         System.out.println(sb.length());
         System.out.println(sb.reverse());
