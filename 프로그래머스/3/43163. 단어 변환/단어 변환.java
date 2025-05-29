@@ -1,54 +1,49 @@
 import java.util.*;
+
+class Node {
+    String s;
+    int dist;
+    
+    public Node (String s, int dist) {
+        this.s = s;
+        this.dist = dist;
+    }
+}
+
+
 class Solution {
     public int solution(String begin, String target, String[] words) {
-        return bfs(begin, target, words);
-    }
-    
-    
-    
-    static int bfs(String begin, String target, String[] words) {
-        int[] visited = new int[words.length + 1];
-        ArrayDeque<Integer> q = new ArrayDeque<>();
-        int len = words.length;
-        int s_len = begin.length();
+        ArrayDeque<Node> q = new ArrayDeque<>();
+        q.offer(new Node(begin, 0));
+        Set<String> visited = new HashSet<>();
+        visited.add(begin);
         
-        for (int i = 0; i < len; i++) {
-            int count = 0;
-            String s = words[i];
-            
-            for (int j = 0; j < s.length(); j++) {
-                char c1 = s.charAt(j);
-                char c2 = begin.charAt(j);
-                if (c1 == c2) count++;
-            }
-            if (count == s.length()-1) {
-                q.offer(i);
-                visited[i] = 1;
-            }
-        }
         
         while (!q.isEmpty()) {
-            int v = q.poll();
+            Node node = q.poll();
+            String s = node.s;
+            int dist = node.dist;
             
-            if (words[v].equals(target)) return visited[v];
+            if (s.equals(target)) return dist;
             
-            for (int nv = 0; nv < len; nv++) {
-                if (visited[nv] == 0) {
-                    int count = 0;
-                    String s1 = words[nv];
-                    String s2 = words[v];
-                    for (int j = 0; j < s_len; j++) {
-                        char c1 = s1.charAt(j);
-                        char c2 = s2.charAt(j);
-                        if (c1 == c2) count++;
-                    }
-                    if (count == s_len - 1) {
-                        q.offer(nv);
-                        visited[nv] = visited[v] + 1;
-                    }
+            for (int i = 0; i < words.length; i++) {
+                String ns = words[i];
+                if (s.equals(ns)) continue;
+                
+                if (!visited.contains(ns) && isConnect(s, ns)) {
+                    visited.add(ns);
+                    q.offer(new Node(ns, dist + 1));
                 }
             }
         }
         return 0;
+    }
+    
+    static boolean isConnect(String s1, String s2) {
+        int count = 0;
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) == s2.charAt(i)) count++;
+        }
+        return count == s1.length() - 1;
     }
 }
