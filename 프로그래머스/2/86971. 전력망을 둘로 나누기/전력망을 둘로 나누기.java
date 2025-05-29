@@ -1,33 +1,42 @@
 import java.util.*;
 
 class Solution {
-    static List<Integer>[] graph;
+    static ArrayList<Integer>[] graph;
     public int solution(int n, int[][] wires) {
         graph = new ArrayList[n+1];
-        int min = n;
-        for (int i = 1; i <= n; i++) {
+        int answer = n;
+        
+        for (int i = 0; i <= n; i++) {
             graph[i] = new ArrayList<>();
         }
         
+        // 인접 리스트 형태로 그래프 저장
         for (int i = 0; i < wires.length; i++) {
-            graph[wires[i][0]].add(wires[i][1]);
-            graph[wires[i][1]].add(wires[i][0]);
+            int v1 = wires[i][0];
+            int v2 = wires[i][1];
+            
+            graph[v1].add(v2);
+            graph[v2].add(v1);
         }
         
+        
+        // flood fill 수행
         for (int i = 0; i < wires.length; i++) {
             int[] cut = wires[i];
-            int count = dfs(1, new boolean[n+1], cut);
+            boolean[] visited = new boolean[n+1];
+            
+            int count = dfs(1, visited, cut);
             int other = n - count;
-            min = Math.min(min, Math.abs(count - other));
+            answer = Math.min(answer, Math.abs(count - other));
         }
-        return min;
+        return answer;
     }
+    
     
     static int dfs(int v, boolean[] visited, int[] cut) {
         visited[v] = true;
         
         int count = 1;
-        
         for (int nv : graph[v]) {
             if ((v == cut[0] && nv == cut[1]) || (v == cut[1] && nv == cut[0])) continue;
             if (!visited[nv]) {
