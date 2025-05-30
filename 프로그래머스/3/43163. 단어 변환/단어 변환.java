@@ -3,7 +3,8 @@ import java.util.*;
 class Node {
     String s;
     int dist;
-    public Node(String s, int dist) {
+    
+    public Node (String s, int dist) {
         this.s = s;
         this.dist = dist;
     }
@@ -22,13 +23,14 @@ class Solution {
             String s = node.s;
             int dist = node.dist;
             
+            
             if (s.equals(target)) return dist;
             
             for (int i = 0; i < words.length; i++) {
                 String ns = words[i];
                 if (s.equals(ns)) continue;
                 
-                if (!visited.contains(ns) && isConnect(s, ns)) {
+                if (isConnect(s, ns) && !visited.contains(ns)) {
                     visited.add(ns);
                     q.offer(new Node(ns, dist + 1));
                 }
@@ -38,13 +40,13 @@ class Solution {
         return 0;
     }
     
-    static boolean isConnect(String s1, String s2) {
+    static boolean isConnect(String s, String ns) {
         int count = 0;
-        
-        for (int i = 0; i < s1.length(); i++) {
-            if (s1.charAt(i) == s2.charAt(i)) count++;
+            
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ns.charAt(i)) count++;   
         }
         
-        return count == s1.length() - 1;
+        return count == s.length() - 1;
     }
 }
