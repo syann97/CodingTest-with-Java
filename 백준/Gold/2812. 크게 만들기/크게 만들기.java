@@ -22,15 +22,12 @@ public class Main {
         while (i < length) {
             char c = number.charAt(i);
 
-            if (stack.isEmpty() || stack.peekLast() >= c) stack.offer(c);
-            else {
-                while (!stack.isEmpty()) {
-                    if (stack.peekLast() >= c || K == 0) break;
-                    stack.pollLast();
-                    K--;
-                }
-                stack.offer(c);
+            while (!stack.isEmpty()) {
+                if (stack.peekLast() >= c || K == 0) break;
+                stack.pollLast();
+                K--;
             }
+            stack.offer(c);
             i++;
         }
 
@@ -38,3 +35,4 @@ public class Main {
         System.out.println(sb);
     }
 }
+
