@@ -16,19 +16,13 @@ public class Main {
         String number = br.readLine();
         ArrayDeque<Character> stack = new ArrayDeque<>();
 
-        int i = 0;
-        int length = number.length();
-
-        while (i < length) {
-            char c = number.charAt(i);
-
+        for (char c : number.toCharArray()) {
             while (!stack.isEmpty()) {
                 if (stack.peekLast() >= c || K == 0) break;
                 stack.pollLast();
                 K--;
             }
             stack.offer(c);
-            i++;
         }
 
         while (L --> 0) sb.append(stack.pollFirst());
