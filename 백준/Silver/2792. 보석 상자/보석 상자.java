@@ -19,12 +19,10 @@ public class Main {
             max = Math.max(max, jewels[i]);
         }
 
-        System.out.println(bs(0, max, N, jewels));
+        System.out.println(bs(1, max, N, jewels));
     }
 
     static boolean isPossible(int N, int jealous, int[] jewels) {
-        if (jealous == 0) return false;
-
         int count = 0;
 
         for (int jewel : jewels) {
