@@ -20,24 +20,31 @@ public class Main {
         }
 
         int M = Integer.parseInt(br.readLine());
-        Arrays.sort(requests);
-
-        System.out.println(bs(0, max, requests, M, 0));
+        System.out.println(bs(1, max, requests, M, 0));
     }
 
     static boolean isPossible (int limit, int M, int[] requests) {
         int sum = 0;
         for (int request : requests) {
-            sum += Math.min(request, limit);
+            if (request > limit)
+                sum += limit;
+            else
+                sum += request;
         }
         return M >= sum;
     }
 
     static int bs(int s, int e, int[] requests, int M, int ans) {
-        if (s > e) return ans;
+        while (s <= e) {
+            int m = (s + e) / 2;
 
-        int m = (s + e) / 2;
+            if (isPossible(m, M, requests)) {
+                s = m + 1;
+                ans = m;
+            }
+            else e = m - 1;
+        }
 
-        return isPossible(m, M, requests) ? bs(m + 1, e, requests, M, m) : bs(s, m - 1, requests, M, ans);
+        return ans;
     }
 }
