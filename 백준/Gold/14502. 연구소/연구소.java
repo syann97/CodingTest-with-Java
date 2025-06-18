@@ -57,15 +57,10 @@ public class Main {
 
     static int spread (int N, int M, int[][] area) {
 
-        int[][] areaCopy = new int[N][M];
-
-        for (int i = 0; i < N; i++) {
-            System.arraycopy(area[i], 0, areaCopy[i], 0, M);
-        }
-
         int count = N * M;
         boolean[][] visited = new boolean[N][M];
         ArrayDeque<Node> q = new ArrayDeque<>();
+        ArrayDeque<Node> infestedArea = new ArrayDeque<>();
 
 
         for (int i = 0; i < N; i++) {
@@ -88,13 +83,19 @@ public class Main {
             for (int d = 0; d < 4; d++) {
                 int ny = y + dy[d];
                 int nx = x + dx[d];
-                if (0 <= ny && ny < N && 0 <= nx && nx < M && !visited[ny][nx] && areaCopy[ny][nx] == 0) {
+                if (0 <= ny && ny < N && 0 <= nx && nx < M && !visited[ny][nx] && area[ny][nx] == 0) {
                     count--;
-                    areaCopy[ny][nx] = 2;
+                    area[ny][nx] = 2;
                     visited[ny][nx] = true;
                     q.offer(new Node(ny, nx));
+                    infestedArea.offer(new Node(ny, nx));
                 }
             }
+        }
+
+        while (!infestedArea.isEmpty()) {
+            Node node = infestedArea.poll();
+            area[node.y][node.x] = 0;
         }
 
         return count;
