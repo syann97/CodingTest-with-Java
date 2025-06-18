@@ -30,7 +30,7 @@ public class Main {
 
     static int binarySearch(int s, int e, List<Integer> LIS, int target) {
         while (s <= e) {
-            int m = (s + e) / 2;
+            int m = (s + e) >> 1;
 
             if (LIS.get(m) < target) {
                 s = m + 1;
