@@ -17,7 +17,10 @@ public class Main {
     static StringTokenizer st;
     static int[] dy = {-1, 0, 1, 0};
     static int[] dx = {0, -1, 0, 1};
+    static boolean[][] visited;
+    static ArrayDeque<Node> init;
     static int answer = 0;
+    static int initCount;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         st = new StringTokenizer(br.readLine());
@@ -33,6 +36,23 @@ public class Main {
                 area[i][j] = Integer.parseInt(st.nextToken());
             }
         }
+
+        initCount = (N * M) - 3;
+        visited = new boolean[N][M];
+        init = new ArrayDeque<>();
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (area[i][j] != 0) {
+                    initCount--;
+                    if (area[i][j] == 2) {
+                        init.offer(new Node(i, j));
+                        visited[i][j] = true;
+                    }
+                }
+            }
+        }
+
 
         bt(0, 0, 0, N, M, area);
         System.out.println(answer);
@@ -56,24 +76,9 @@ public class Main {
     }
 
     static int spread (int N, int M, int[][] area) {
-
-        int count = N * M;
-        boolean[][] visited = new boolean[N][M];
-        ArrayDeque<Node> q = new ArrayDeque<>();
+        ArrayDeque<Node> q = new ArrayDeque<>(init);
         ArrayDeque<Node> infestedArea = new ArrayDeque<>();
-
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (area[i][j] != 0) {
-                    count--;
-                    if (area[i][j] == 2) {
-                        q.offer(new Node(i, j));
-                        visited[i][j] = true;
-                    }
-                }
-            }
-        }
+        int count = initCount;
 
         while (!q.isEmpty()) {
             Node node = q.poll();
@@ -96,7 +101,9 @@ public class Main {
         while (!infestedArea.isEmpty()) {
             Node node = infestedArea.poll();
             area[node.y][node.x] = 0;
+            visited[node.y][node.x] = false;
         }
+
 
         return count;
     }
