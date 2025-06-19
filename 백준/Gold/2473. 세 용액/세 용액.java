@@ -35,6 +35,11 @@ public class Main {
                     int m = (s + e) / 2;
                     long checkMin = Math.abs(twoSolutions + solutions[m]);
 
+                    if (twoSolutions + solutions[m] == 0) {
+                        System.out.println(solutions[i] + " " + solutions[j] + " " + solutions[m]);
+                        return;
+                    }
+
                     if (checkMin < min) {
                         min = checkMin;
                         answer[0] = solutions[i];
@@ -42,11 +47,8 @@ public class Main {
                         answer[2] = solutions[m];
                     }
 
-                    if (twoSolutions + solutions[m] == 0) {
-                        System.out.println(solutions[i] + " " + solutions[j] + " " + solutions[m]);
-                        return;
-                    }
-                    else if (twoSolutions + solutions[m] > 0) e = m - 1;
+
+                    if (twoSolutions + solutions[m] > 0) e = m - 1;
                     else s = m + 1;
                 }
             }
