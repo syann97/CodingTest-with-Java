@@ -1,85 +1,79 @@
-import org.w3c.dom.Node;
-
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
+
 
 class Edge implements Comparable<Edge> {
     int u;
     int v;
-    int cost;
+    int w;
 
-    public Edge (int u, int v, int cost) {
+    public Edge(int u, int v, int w) {
         this.u = u;
         this.v = v;
-        this.cost = cost;
+        this.w = w;
     }
 
     @Override
     public int compareTo(Edge o) {
-        return this.cost - o.cost;
+        return this.w - o.w;
     }
 }
 
-
 public class Main {
-    static StringTokenizer st;
+    static PriorityQueue<Edge> edges;
     static int[] parent;
-    public static void main(String[] args) throws Exception {
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        st = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         int V = Integer.parseInt(st.nextToken());
         int E = Integer.parseInt(st.nextToken());
 
-        parent = new int[V+1];
-        for (int i = 1; i <= V; i++) parent[i] = i;
-
-        List<Edge> edges = new ArrayList<>();
-        for (int i = 0; i < E; i++) {
-            st = new StringTokenizer(br.readLine());
-            int A = Integer.parseInt(st.nextToken());
-            int B = Integer.parseInt(st.nextToken());
-            int C = Integer.parseInt(st.nextToken());
-
-            edges.add(new Edge(A, B, C));
+        edges = new PriorityQueue<>();
+        parent = new int[V + 1];
+        for (int i = 1; i <= V; i++) {
+            parent[i] = i;
         }
 
-        Collections.sort(edges);
+        for (int i = 1; i <= E; i++) {
+            st = new StringTokenizer(br.readLine());
 
-        int total = 0;
-        int count = 0;
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
 
-        for (Edge edge : edges) {
+            edges.add(new Edge(u, v, w));
+        }
+
+        int count = V;
+        int answer = 0;
+
+        while (count > 1) {
+            Edge edge = edges.poll();
+
             if (find(edge.u) != find(edge.v)) {
                 union(edge.u, edge.v);
-                total += edge.cost;
-                count++;
+                answer += edge.w;
+                count--;
             }
-            if (count == V - 1) break;
         }
 
-        System.out.println(total);
+        System.out.println(answer);
     }
 
-    // 합치기
-    static void union (int a, int b) {
+    static void union(int a, int b) {
         a = find(a);
         b = find(b);
-
+        
         if (a > b) parent[a] = b;
         else parent[b] = a;
     }
 
-
-    // 최상위 부모 찾기
-    static int find (int x) {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]); // 경로 압축
-        }
-        return parent[x];
+    static int find(int a) {
+        if (parent[a] == a) return a;
+        return parent[a] = find(parent[a]);
     }
 }
