@@ -54,8 +54,7 @@ public class Main {
         while (count > 1) {
             Edge edge = edges.poll();
 
-            if (find(edge.u) != find(edge.v)) {
-                union(edge.u, edge.v);
+            if (union(edge.u, edge.v)) {
                 answer += edge.w;
                 count--;
             }
@@ -64,14 +63,14 @@ public class Main {
         System.out.println(answer);
     }
 
-    static void union(int a, int b) {
+    static boolean union(int a, int b) {
         a = find(a);
         b = find(b);
 
-        
-        if (a != b) {
-            parent[b] = a;
-        }
+
+        if (a == b) return false;
+        parent[b] = a;
+        return true;
     }
 
     static int find(int a) {
