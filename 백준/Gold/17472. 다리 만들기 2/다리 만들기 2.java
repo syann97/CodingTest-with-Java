@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.util.PriorityQueue;
 
 class Reader {
-    private final int SIZE = 1 << 13;
+    private final int SIZE = 1 << 8;
     private byte[] buffer = new byte[SIZE];
     private int size, index;
 
@@ -131,7 +131,7 @@ public class Main {
                         while (true) {
                             y += dy[d];
                             x += dx[d];
-                            
+
                             if (y < 0 || y >= N || x < 0 || x >= M || u == area[y][x]) break;
                             if (area[y][x] != 0) {
                                 if (w >= 2) {
