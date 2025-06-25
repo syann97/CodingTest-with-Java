@@ -1,7 +1,5 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.PriorityQueue;
 
 class Reader {
     private final int SIZE = 1 << 13;
@@ -38,7 +36,6 @@ class Reader {
 }
 
 
-
 class Edge implements Comparable<Edge> {
     int u;
     int v;
@@ -54,30 +51,18 @@ class Edge implements Comparable<Edge> {
     public int compareTo(Edge o) {
         return this.w - o.w;
     }
-
-    @Override
-    public String toString() {
-        return "Edge{" +
-                "u=" + u +
-                ", v=" + v +
-                ", w=" + w +
-                '}';
-    }
 }
 
 
 public class Main {
     static int[] dy = {0, -1, 0, 1};
     static int[] dx = {-1, 0, 1, 0};
-    static int min;
-    static PriorityQueue<Edge> edges;
     static int[] parent;
     public static void main(String[] args) throws Exception {
         Reader in = new Reader();
 
         int N = in.nextInt();
         int M = in.nextInt();
-        min = N * M;
 
         int[][] area = new int[N][M];
 
@@ -91,7 +76,7 @@ public class Main {
         parent = new int[V+1];
 
         for (int i = 2; i <= V; i++) parent[i] = i;
-        bf(N, M, area, new boolean[N][M]);
+        PriorityQueue<Edge> edges = bf(N, M, area);
 
         int count = 0;
         int result = 0;
@@ -132,16 +117,13 @@ public class Main {
         }
     }
 
-    static void bf(int N, int M, int[][] area, boolean[][] visited) {
-        edges = new PriorityQueue<>();
+    static PriorityQueue<Edge> bf(int N, int M, int[][] area) {
+        PriorityQueue<Edge> edges = new PriorityQueue<>();
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                // 로직 수행
                 if (area[i][j] >= 2) {
                     int u = area[i][j];
-                    // 상/하/좌/우
                     for (int d = 0; d < 4; d++) {
-                        // 방향 정해짐
                         int w = 0;
                         int y = i;
                         int x = j;
@@ -149,10 +131,8 @@ public class Main {
                         while (true) {
                             y += dy[d];
                             x += dx[d];
-
-                            // count 미반환 로직
+                            
                             if (y < 0 || y >= N || x < 0 || x >= M || u == area[y][x]) break;
-                            // count 반환 로직 offer 로직
                             if (area[y][x] != 0) {
                                 if (w >= 2) {
                                     edges.offer(new Edge(u, area[y][x], w));
@@ -165,6 +145,7 @@ public class Main {
                 }
             }
         }
+        return edges;
     }
 
     static int find (int x) {
