@@ -1,6 +1,42 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+
+class Reader {
+    private final int SIZE = 1 << 13;
+    private byte[] buffer = new byte[SIZE];
+    private int size, index;
+
+    private byte read() throws IOException {
+        if (size == index) {
+            size = System.in.read(buffer, index = 0, SIZE);
+
+            if (size < 0) buffer[0] = -1;
+        }
+        return buffer[index++];
+    }
+
+    int nextInt() throws IOException {
+        int n = 0;
+        byte c;
+        boolean isMinus = false;
+
+        while ((c = read()) <= 32);
+
+
+        if (c == 45) {
+            isMinus = true;
+            c = read();
+        }
+
+        do n = (n << 3) + (n << 1) + (c & 15);
+        while (48 <= (c = read()) && c <= 57);
+
+        return isMinus ? ~n+1 : n;
+    }
+}
+
 
 
 class Edge implements Comparable<Edge> {
@@ -31,26 +67,23 @@ class Edge implements Comparable<Edge> {
 
 
 public class Main {
-    static StringTokenizer st;
     static int[] dy = {0, -1, 0, 1};
     static int[] dx = {-1, 0, 1, 0};
     static int min;
     static PriorityQueue<Edge> edges;
     static int[] parent;
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        st = new StringTokenizer(br.readLine());
+        Reader in = new Reader();
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        int N = in.nextInt();
+        int M = in.nextInt();
         min = N * M;
 
         int[][] area = new int[N][M];
 
         for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
             for (int j = 0; j < M; j++) {
-                area[i][j] = Integer.parseInt(st.nextToken());
+                area[i][j] = in.nextInt();
             }
         }
 
