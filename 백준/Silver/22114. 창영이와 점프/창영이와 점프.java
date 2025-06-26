@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 class Reader {
-    private final int SIZE = 1 << 8;
+    private final int SIZE = 1 << 19;
     private byte[] buffer = new byte[SIZE];
     private int size, index;
 
