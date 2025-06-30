@@ -1,7 +1,42 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+
+class Reader {
+    private static final int SIZE = 1 << 13;
+    private byte[] buffer = new byte[SIZE];
+    private int index, size;
+
+    public byte read() throws IOException {
+        if (index == size) {
+            size = System.in.read(buffer, index = 0, SIZE);
+            if (size < 0) {
+                buffer[0] = -1;
+            }
+        }
+        return buffer[index++];
+    }
+
+    int nextInt() throws IOException {
+        int n = 0;
+        byte c;
+        boolean isMinus = false;
+
+        while ((c = read()) <= 32);
+
+        if (c == 45) {
+            isMinus = true;
+            c = read();
+        }
+
+        do n = (n << 3) + (n << 1) + (c & 15);
+        while (48 <= (c = read()) && c <= 57);
+
+        return isMinus ? ~n + 1 : n;
+    }
+}
 
 class Edge implements Comparable<Edge> {
     int v;
@@ -19,11 +54,10 @@ class Edge implements Comparable<Edge> {
 }
 
 public class Main {
-    static StringTokenizer st;
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        int M = Integer.parseInt(br.readLine());
+        Reader in = new Reader();
+        int N = in.nextInt();
+        int M = in.nextInt();
 
         List<Edge>[] graph = new ArrayList[N+1];
         for (int i = 1; i <= N; i++) {
@@ -31,18 +65,15 @@ public class Main {
         }
 
         for (int i = 0; i < M; i++) {
-            st = new StringTokenizer(br.readLine());
-            int u = Integer.parseInt(st.nextToken());
-            int v = Integer.parseInt(st.nextToken());
-            int w = Integer.parseInt(st.nextToken());
+            int u = in.nextInt();
+            int v = in.nextInt();
+            int w = in.nextInt();
 
             graph[u].add(new Edge(v, w));
         }
 
-        st = new StringTokenizer(br.readLine());
-
-        int s = Integer.parseInt(st.nextToken());
-        int e = Integer.parseInt(st.nextToken());
+        int s = in.nextInt();
+        int e = in.nextInt();
 
         System.out.println(dijkstra(s, e, N, graph));
     }
