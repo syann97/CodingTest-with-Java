@@ -1,19 +1,22 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
-class Node {
+class Node implements Comparable<Node> {
     int y;
     int x;
     int c;
+
     public Node (int y, int x, int c) {
         this.y = y;
         this.x = x;
         this.c = c;
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        return Integer.compare(this.c, o.c);
     }
 }
 
@@ -40,8 +43,8 @@ public class Main {
 
 
     static int bfs (int N, int M, char[][] maze) {
-        Queue<Node> q = new ArrayDeque<>();
-        q.offer(new Node(0, 0, 0));
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.offer(new Node(0, 0, 0));
 
 
         int[][] visited = new int[M][N];
@@ -52,8 +55,8 @@ public class Main {
         visited[0][0] = 0;
 
 
-        while(!q.isEmpty()) {
-            Node node = q.poll();
+        while(!pq.isEmpty()) {
+            Node node = pq.poll();
             int y = node.y;
             int x = node.x;
             int c = node.c;
@@ -73,7 +76,7 @@ public class Main {
 
                 if (visited[ny][nx] > nc) {
                     visited[ny][nx] = nc;
-                    q.offer(new Node(ny, nx, nc));
+                    pq.offer(new Node(ny, nx, nc));
                 }
             }
         }
