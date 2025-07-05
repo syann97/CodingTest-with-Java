@@ -1,7 +1,44 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+
+class Reader {
+    private static final int SIZE = 1 << 13; // 8192
+    private static byte[] buffer = new byte[SIZE];
+    private static int size = 0, index = 0;
+
+    private byte read() throws IOException {
+        if (index == size) {
+            size = System.in.read(buffer, index = 0, SIZE);
+
+            if (size <= 0) {
+                return -1;
+            }
+        }
+        return buffer[index++];
+    }
+
+    int nextInt() throws IOException {
+        int n = 0;
+        byte c;
+        boolean isMinus = false;
+
+        while ((c = read()) <= 32);
+
+        if (c == 45) {
+            isMinus = true;
+            c = read();
+        }
+
+        do n = (n << 3) + (n << 1) + (c & 15);
+        while (48 <= (c = read()) && c <= 57);
+
+        return isMinus ? ~n + 1 : n;
+    }
+}
 
 class Node {
     int end;
@@ -23,16 +60,16 @@ public class Main {
     static ArrayList<Node>[] graph;
 
     public static void main(String[] args) throws IOException {
-        TC = Integer.parseInt(br.readLine());
+        Reader in = new Reader();
+        TC = in.nextInt();
         int S;
         int E;
         int T;
 
         while (TC --> 0) {
-            st = new StringTokenizer(br.readLine());
-            N = Integer.parseInt(st.nextToken());
-            M = Integer.parseInt(st.nextToken());
-            W = Integer.parseInt(st.nextToken());
+            N = in.nextInt();
+            M = in.nextInt();
+            W = in.nextInt();
             graph = new ArrayList[N+1];
 
             for (int i = 1; i <= N; i++) {
@@ -40,19 +77,17 @@ public class Main {
             }
 
             for (int i = 0; i < M; i++) {
-                st = new StringTokenizer(br.readLine());
-                S = Integer.parseInt(st.nextToken());
-                E = Integer.parseInt(st.nextToken());
-                T = Integer.parseInt(st.nextToken());
+                S = in.nextInt();
+                E = in.nextInt();
+                T = in.nextInt();
                 graph[S].add(new Node(E, T));
                 graph[E].add(new Node(S, T));
             }
 
             for (int i = 0; i < W; i++) {
-                st = new StringTokenizer(br.readLine());
-                S = Integer.parseInt(st.nextToken());
-                E = Integer.parseInt(st.nextToken());
-                T = Integer.parseInt(st.nextToken());
+                S = in.nextInt();
+                E = in.nextInt();
+                T = in.nextInt();
                 graph[S].add(new Node(E, -T));
             }
 
