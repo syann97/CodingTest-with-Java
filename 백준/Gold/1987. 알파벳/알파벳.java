@@ -27,16 +27,13 @@ public class Main {
         }
 
         boolean[][] visited = new boolean[N][M];
-        Set<Character> alphabetSet = new HashSet<>();
-
         visited[0][0] = true;
-        alphabetSet.add(board[0][0]);
 
-        dfs(1, 0, 0, board, visited, alphabetSet);
+        dfs(1, 0, 0, board, visited, 1 << (board[0][0] - 65));
         System.out.println(max);
     }
 
-    static void dfs(int count, int y, int x, char[][] board, boolean[][] visited, Set<Character> alphabetSet) {
+    static void dfs(int count, int y, int x, char[][] board, boolean[][] visited, int alphabetMasking) {
         max = Math.max(max, count);
 
         for (int d = 0; d < 4; d++) {
@@ -44,12 +41,13 @@ public class Main {
             int nx = x + dx[d];
 
             if (ny < 0 || ny >= N || nx < 0 || nx >= M || visited[ny][nx]) continue;
-            if (alphabetSet.add(board[ny][nx])) {
+            int currentAlphabet = 1 << (board[ny][nx] - 65);
+            if ((alphabetMasking & (currentAlphabet)) == 0) {
                 visited[ny][nx] = true;
-                dfs(count + 1, ny, nx, board, visited, alphabetSet);
+                dfs(count + 1, ny, nx, board, visited, alphabetMasking | currentAlphabet);
                 visited[ny][nx] = false;
-                alphabetSet.remove(board[ny][nx]);
             }
         }
     }
 }
+
