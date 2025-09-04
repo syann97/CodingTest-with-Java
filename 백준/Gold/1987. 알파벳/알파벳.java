@@ -15,15 +15,17 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        int[][] board = new int[N][M];
-        for (int row = 0; row < N; row++) {
+        int[][] board = new int[N+2][M+2];
+        for (int row = 1; row <= N; row++) {
             char[] tmp = br.readLine().toCharArray();
-            for (int col = 0; col < M; col++) {
-                board[row][col] = tmp[col] - 65;
+            for (int col = 1; col <= M; col++) {
+                board[row][col] = tmp[col-1] - 64;
             }
         }
 
-        dfs(1, 0, 0, board, 1 << board[0][0]);
+        int initMasking = 1;
+        int startMasking = 1 << board[1][1];
+        dfs(1, 1, 1, board, initMasking | startMasking);
 
         System.out.println(max);
     }
@@ -36,8 +38,6 @@ public class Main {
         for (int d = 0; d < 4; d++) {
             int ny = y + dy[d];
             int nx = x + dx[d];
-
-            if (ny < 0 || ny >= N || nx < 0 || nx >= M) continue;
 
             int currentAlphabet = 1 << (board[ny][nx]);
             if ((alphabetMasking & currentAlphabet) == 0) {
