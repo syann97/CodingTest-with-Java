@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main {
@@ -8,8 +6,8 @@ public class Main {
     static int[] dy = {-1, 0, 1, 0};
     static int[] dx = {0, -1, 0, 1};
     static int max = 0;
-    static int N;
-    static int M;
+    static int N, M;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         st = new StringTokenizer(br.readLine());
@@ -18,36 +16,30 @@ public class Main {
         M = Integer.parseInt(st.nextToken());
 
         char[][] board = new char[N][M];
-
         for (int i = 0; i < N; i++) {
-            char[] row = br.readLine().toCharArray();
-            for (int j = 0; j < M; j++) {
-                board[i][j] = row[j];
-            }
+            board[i] = br.readLine().toCharArray();
         }
 
-        boolean[][] visited = new boolean[N][M];
-        visited[0][0] = true;
+        dfs(1, 0, 0, board, 1 << (board[0][0] - 65));
 
-        dfs(1, 0, 0, board, visited, 1 << (board[0][0] - 65));
         System.out.println(max);
     }
 
-    static void dfs(int count, int y, int x, char[][] board, boolean[][] visited, int alphabetMasking) {
+    static void dfs(int count, int y, int x, char[][] board, int alphabetMasking) {
         max = Math.max(max, count);
+
+        if (max == 26) return;
 
         for (int d = 0; d < 4; d++) {
             int ny = y + dy[d];
             int nx = x + dx[d];
 
-            if (ny < 0 || ny >= N || nx < 0 || nx >= M || visited[ny][nx]) continue;
-            int currentAlphabet = 1 << (board[ny][nx] - 65);
-            if ((alphabetMasking & (currentAlphabet)) == 0) {
-                visited[ny][nx] = true;
-                dfs(count + 1, ny, nx, board, visited, alphabetMasking | currentAlphabet);
-                visited[ny][nx] = false;
+            if (ny < 0 || ny >= N || nx < 0 || nx >= M) continue;
+
+            int currentAlphabet = 1 << (board[ny][nx] - 'A');
+            if ((alphabetMasking & currentAlphabet) == 0) {
+                dfs(count + 1, ny, nx, board, alphabetMasking | currentAlphabet);
             }
         }
     }
 }
-
