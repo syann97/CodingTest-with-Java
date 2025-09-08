@@ -15,6 +15,7 @@ class Main {
         int having = (int)(M / K);
 
         while (having --> 0) {
+            if (R < 1) break;
             R /= 2;
         }
 
