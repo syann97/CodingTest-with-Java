@@ -5,36 +5,44 @@ import java.util.StringTokenizer;
 
 class Main {
     static final String word = "SciComLove";
+    static final int WORD_LEN = word.length();
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
         StringTokenizer st = new StringTokenizer(br.readLine());
-        StringBuilder sb = new StringBuilder();
-
         int N = Integer.parseInt(st.nextToken());
         int Q = Integer.parseInt(st.nextToken());
-
-        for (int i = 0; i < N / 10; i++) sb.append(word);
-
-        sb.append(word, 0, N % 10);
-        String s = sb.toString();
-        boolean[] isUpper = new boolean[N];
-
-        for (int i = 0; i < N; i++) {
-            char c = s.charAt(i);
-            if (Character.isUpperCase(c)) isUpper[i] = true;
-        }
-
-        sb = new StringBuilder();
-        for (int i = 0; i < Q; i++) {
-            int level = Integer.parseInt(br.readLine());
-            int answer = 0;
-
-            for (int j = 0; j < N; j++) {
-                if (j + 1 <= level && !isUpper[j]) answer++;
-                if (j + 1 > level && isUpper[j]) answer++;
+        
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < N / WORD_LEN; i++) sb.append(word);
+        sb.append(word, 0, N % WORD_LEN);
+        char[] ch = sb.toString().toCharArray();
+        
+        int upperCount = 0;
+        for (char c : ch) {
+            if (Character.isUpperCase(c)) {
+                upperCount++;
             }
-            sb.append(answer).append("\n");
         }
-        System.out.print(sb);
+        
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < Q; i++) {
+            int X = Integer.parseInt(br.readLine());
+            int index = X - 1;
+
+            char originalChar = ch[index];
+            
+            if (Character.isLowerCase(originalChar)) {
+                ch[index] = Character.toUpperCase(originalChar);
+                upperCount++;
+            } else {
+                ch[index] = Character.toLowerCase(originalChar);
+                upperCount--;
+            }
+            result.append(upperCount).append("\n");
+        }
+
+        System.out.print(result);
     }
 }
