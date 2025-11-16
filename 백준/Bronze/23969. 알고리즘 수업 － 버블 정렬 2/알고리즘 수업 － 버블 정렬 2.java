@@ -8,7 +8,6 @@ class Main {
     static StringTokenizer st;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
 
         st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
@@ -19,7 +18,13 @@ class Main {
         for (int i  = 0; i < N; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
         }
-
+        
+        System.out.println(bubbleSortK(arr, N, K));
+    }
+    
+    
+    static String bubbleSortK (int[] arr, int N, int K) {
+        StringBuilder sb = new StringBuilder();
         int count = 0;
         for (int i = 0; i < N - 1; i++) {
             for (int j = 0; j < N - 1 - i; j++) {
@@ -40,7 +45,6 @@ class Main {
         }
         else sb.append("-1");
 
-        System.out.println(sb);
-
+        return sb.toString();
     }
 }
