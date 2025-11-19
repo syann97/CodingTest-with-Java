@@ -1,29 +1,84 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.StringTokenizer;
+
+
+class Reader {
+    private final int SIZE = 1 << 13;
+    private byte[] buffer = new byte[SIZE];
+    private int index, size;
+
+    int nextInt() throws IOException {
+        int n = 0;
+        byte c;
+        boolean isMinus = false;
+
+        while ((c = read()) <= ' ');
+
+        if (c == '-') {
+            isMinus = true;
+            c = read();
+        }
+
+        do {
+            n = (n << 3) + (n << 1) + (c & 15);
+        } while (isNumber(c = read()));
+
+        return isMinus ? ~n + 1 : n;
+    }
+
+
+    String nextString() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        byte c;
+
+        while ((c = read()) <= ' ');
+
+        do {
+            sb.append((char) c);
+        } while (isAlphabet(c = read()) || isNumber(c));
+
+        return sb.toString();
+    }
+
+    private boolean isNumber(byte c) {
+        return c >= '0' && c <= '9';
+    }
+
+    private boolean isAlphabet(byte c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+    }
+
+
+    private byte read() throws IOException {
+        if (index == size) {
+            size = System.in.read(buffer, index = 0, SIZE);
+
+            if (size < 0) {
+                buffer[0] = -1;
+            }
+        }
+
+        return buffer[index++];
+    }
+}
 
 
 class Main {
-    static StringTokenizer st;
     static int[] parent = new int[200000];
     static int[] size = new int[200000];
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Reader r = new Reader();
         StringBuilder sb = new StringBuilder();
-        int T = Integer.parseInt(br.readLine());
+        int T = r.nextInt();
 
         while (T --> 0) {
             HashMap<String, Integer> map = new HashMap<>();
-            int F = Integer.parseInt(br.readLine());
+            int F = r.nextInt();
 
             int index = 0;
             for (int i = 0; i < F; i++) {
-                st = new StringTokenizer(br.readLine());
-
-                String a = st.nextToken();
-                String b = st.nextToken();
+                String a = r.nextString();
+                String b = r.nextString();
 
                 int indexA = 0;
                 int indexB = 0;
