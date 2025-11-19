@@ -7,8 +7,8 @@ import java.util.StringTokenizer;
 
 class Main {
     static StringTokenizer st;
-    static int[] parent;
-    static int[] size;
+    static int[] parent = new int[200000];
+    static int[] size = new int[200000];
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
@@ -17,8 +17,6 @@ class Main {
         while (T --> 0) {
             HashMap<String, Integer> map = new HashMap<>();
             int F = Integer.parseInt(br.readLine());
-            parent = new int[F * 2];
-            size = new int[F * 2];
 
             int index = 0;
             for (int i = 0; i < F; i++) {
@@ -68,7 +66,7 @@ class Main {
         y = find(y);
 
         if (x == y) return size[x];
-        
+
         int sizeX = size[x];
         int sizeY = size[y];
 
