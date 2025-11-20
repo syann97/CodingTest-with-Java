@@ -24,27 +24,18 @@ class Main {
 
         int[] counting = new int[100001];
 
-        while (start <= end) {
+        while (end < N) {
             int num = arr[end];
             if (counting[num] == K) {
-                while (true) {
-                    int target = arr[start];
-                    if (target == num) {
-                        start++;
-                        break;
-                    }
-                    counting[target]--;
-                    start++;
-                }
+                counting[arr[start]]--;
+                start++;
             }
+
             else {
                 counting[num]++;
-                max = Math.max(max, end - start + 1);
+                end++;
+                max = Math.max(max, end - start);
             }
-
-            end++;
-
-            if (end == N) break;
         }
 
         System.out.println(max);
