@@ -37,11 +37,11 @@ class Main {
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
-        Jewel[] jewels = new Jewel[N];
+        PriorityQueue<Jewel> jewelPQ  = new PriorityQueue<>();
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            jewels[i] = new Jewel(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            jewelPQ.offer(new Jewel(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
         }
 
         int[] bags = new int[K];
@@ -50,18 +50,15 @@ class Main {
             bags[i] = Integer.parseInt(br.readLine());
         }
 
-        Arrays.sort(jewels);
         Arrays.sort(bags);
 
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
 
         long answer = 0;
-        int index = 0;
 
         for (int bag : bags) {
-            while (index < N && jewels[index].m <= bag) {
-                pq.offer(jewels[index].v);
-                index++;
+            while (!jewelPQ.isEmpty() && jewelPQ.peek().m <= bag) {
+                pq.offer(jewelPQ.poll().v);
             }
 
             if (!pq.isEmpty()) {
