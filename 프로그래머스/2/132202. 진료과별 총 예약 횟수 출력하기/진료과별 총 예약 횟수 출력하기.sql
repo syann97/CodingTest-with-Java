@@ -12,5 +12,3 @@ GROUP BY
 ORDER BY
     COUNT(*) ASC,
     MCDP_CD ASC
-    
-    
