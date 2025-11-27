@@ -2,4 +2,3 @@ SELECT COUNT(*) AS COUNT FROM ECOLI_DATA
   WHERE (GENOTYPE >> 1) & 1 != 1 
     AND ((GENOTYPE >> 0) & 1 = 1 
      OR (GENOTYPE >> 2) & 1 = 1)
-    
