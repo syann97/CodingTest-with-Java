@@ -1,16 +1,28 @@
-SELECT 
-    SUM(A.SCORE) AS SCORE,
-    A.EMP_NO,
-    B.EMP_NAME,
-    B.POSITION,
-    B.EMAIL
-FROM 
-    HR_GRADE A JOIN HR_EMPLOYEES B
-    ON A.EMP_NO = B.EMP_NO
-WHERE
-    A.YEAR = 2022
+SELECT
+    SUM(B.SCORE) AS SCORE,
+    B.EMP_NO,
+    A.EMP_NAME,
+    A.POSITION,
+    A.EMAIL
+FROM
+    HR_EMPLOYEES A JOIN HR_GRADE B
+    ON
+        A.EMP_NO = B.EMP_NO
 GROUP BY
-    A.EMP_NO
-ORDER BY
-    SUM(A.SCORE) DESC
-LIMIT 1
+    B.EMP_NO
+HAVING      # 2022년 컬럼에서 하나의 점수를 골라야 하는데
+    SUM(B.SCORE) = (
+        SELECT 
+            MAX(SCORE)
+        FROM
+            (
+                SELECT
+                    SUM(SCORE) AS SCORE
+                FROM
+                    HR_GRADE
+                WHERE
+                    YEAR = 2022
+                GROUP BY
+                    EMP_NO
+            ) AS TOTAL_SCORE
+    )
