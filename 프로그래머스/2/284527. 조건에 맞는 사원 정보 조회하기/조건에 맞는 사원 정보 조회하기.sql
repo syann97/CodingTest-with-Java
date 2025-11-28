@@ -10,7 +10,7 @@ FROM
         A.EMP_NO = B.EMP_NO
 GROUP BY
     B.EMP_NO
-HAVING      # 2022년 컬럼에서 하나의 점수를 골라야 하는데
+HAVING
     SUM(B.SCORE) = (
         SELECT 
             MAX(SCORE)
