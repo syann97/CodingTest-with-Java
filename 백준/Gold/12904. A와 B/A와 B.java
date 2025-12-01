@@ -12,29 +12,51 @@ public class Main {
         L = S.length();
         word = br.readLine().toCharArray();
 
-        System.out.println(greedy(0, word.length - 1, false));
+        System.out.println(greedy());
     }
 
-    private static String greedy(int start, int end, boolean isReverse) {
-        if (Math.abs(end - start) + 1 == L) {
-            StringBuilder tmp = new StringBuilder();
-            String result;
+    private static String greedy() {
+        int N = word.length - L;
+        int start = 0;
+        int end = word.length - 1;
+        boolean isReverse = false;
 
-            if (isReverse) tmp.append(new String(word, end, L)).reverse();
-            else tmp.append(new String(word, start, L));
+        while (N --> 0) {
+            char lastChar;
 
-            result = tmp.toString();
+            if (isReverse) {
+                lastChar = word[start];
+            } else {
+                lastChar = word[end];
+            }
 
-            return S.equals(result) ? "1" : "0";
+            if (lastChar == 'A') {
+                if (isReverse) {
+                    start++;
+                } else {
+                    end--;
+                }
+            } else {
+                if (isReverse) {
+                    start++;
+                } else {
+                    end--;
+                }
+                isReverse = !isReverse;
+            }
         }
 
-        if (word[end] == 'A') {
-            if (isReverse) return greedy(start, end + 1, true);
-            else return greedy(start, end - 1, false);
+        StringBuilder tmp = new StringBuilder();
+        String result;
+
+        if (isReverse) {
+            tmp.append(new String(word, start, L)).reverse();
+        } else {
+            tmp.append(new String(word, start, L));
         }
-        else {
-            if (isReverse) return greedy(end + 1, start, !isReverse);
-            else return greedy(end - 1, start, !isReverse);
-        }
+
+        result = tmp.toString();
+
+        return S.equals(result) ? "1" : "0";
     }
 }
