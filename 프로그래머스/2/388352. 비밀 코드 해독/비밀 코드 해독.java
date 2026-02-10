@@ -30,7 +30,7 @@ class Solution {
         }
         
         boolean flag;
-        for (int i = cur + 1; i <= N; i++) {
+        for (int i = cur + 1; i <= N - 4 + cnt; i++) {
             
             flag = false;
             
