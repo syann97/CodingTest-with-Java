@@ -1,13 +1,7 @@
 import java.util.*;
 
 class Solution {
-    
-    static int N;
-    static int result = 0;
-    
     public int solution(int n, int[][] q, int[] ans) {
-        
-        N = n;
         
         boolean[][] countingQ = new boolean[q.length][n+1];
         
@@ -17,18 +11,16 @@ class Solution {
             }
         }
         
-        bf(0, 0, new int[ans.length], ans, countingQ);
-        
-        return result;
+        return bf(0, 0, new int[ans.length], ans, countingQ, n);
     }
     
     
-    static void bf (int cnt, int cur, int[] tmp, int[] ans, boolean[][] countingQ) {
+    static int bf (int cnt, int cur, int[] tmp, int[] ans, boolean[][] countingQ, int N) {
         if (cnt == 5) {
-            if (Arrays.equals(tmp, ans)) result++;
-            return;
+            return Arrays.equals(tmp, ans) ? 1 : 0;
         }
         
+        int total = 0;
         boolean flag;
         for (int i = cur + 1; i <= N - 4 + cnt; i++) {
             
@@ -41,7 +33,18 @@ class Solution {
                 }
             }
             
-            if (!flag) bf(cnt + 1, i, tmp, ans, countingQ);
+            if (!flag) {
+                for (int j = 0; j < countingQ.length; j++) {
+                    int need = ans[j] - tmp[j]; 
+                    
+                    if (need > 4 - cnt) {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!flag) total += bf(cnt + 1, i, tmp, ans, countingQ, N);
             
             for (int j = 0; j < countingQ.length; j++) {
                 if (countingQ[j][i]) {
@@ -49,5 +52,7 @@ class Solution {
                 }
             }
         }
+        
+        return total;
     }
 }
