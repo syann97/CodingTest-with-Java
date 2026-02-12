@@ -1,5 +1,6 @@
 import java.util.*;
 
+
 class Solution {
     public int solution(int[][] points, int[][] routes) {
         int result = 0;
@@ -21,9 +22,6 @@ class Solution {
             }
             
             map[y][x].put(turn, count + 1);
-
-            
-
             
             for (int j = 1; j < routes[i].length; j++) {
                 int[] next = points[routes[i][j] - 1];
