@@ -24,7 +24,7 @@ public class Main {
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            System.out.println(f(a, b));
+            sb.append(f(a, b)).append("\n");
         }
 
         System.out.println(sb);
