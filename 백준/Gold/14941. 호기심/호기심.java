@@ -6,16 +6,16 @@ import java.util.*;
 
 public class Main {
     static StringTokenizer st;
-    static boolean[] isNotPrime = new boolean[100001];
+    static final int MAX = 100000;
     static ArrayList<Integer> primes = new ArrayList<>();
-    static long[] even = new long[100001];
-    static long[] odd = new long[100001];
+    static long[] even;
+    static long[] odd;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
-        eratosthenes();
+        init();
 
         int N = Integer.parseInt(br.readLine());
 
@@ -30,39 +30,43 @@ public class Main {
         System.out.println(sb);
     }
 
-    private static void eratosthenes() {
-        int index = 0;
-        int MAX = 100000;
+    private static void init() {
+        boolean[] isNotPrime = new boolean[MAX + 1];
         isNotPrime[0] = isNotPrime[1] = true;
 
         for (int i = 2; i <= MAX; i++) {
-            even[i] = even[i - 1];
-            odd[i] = odd[i - 1];
-
             if (!isNotPrime[i]) {
                 primes.add(i);
-
-                if (index % 2 == 0) {
-                    even[i] += (3L * i);
-                    odd[i] -= i;
-                } else {
-                    even[i] -= i;
-                    odd[i] += (3L * i);
-                }
 
                 if ((long)i * i <= MAX) {
                     for (int j = i * i; j <= MAX; j += i) {
                         isNotPrime[j] = true;
                     }
                 }
-                index++;
+            }
+        }
+
+        even = new long[primes.size()];
+        odd = new long[primes.size()];
+        long e = 0;
+        long o = 0;
+        for (int i = 0; i < primes.size(); i++) {
+            int n = primes.get(i);
+
+            if (i % 2 == 0) {
+                even[i] = e += 3L * n;
+                odd[i] = o -= n;
+            }
+            else {
+                even[i] = e -= n;
+                odd[i] = o += 3L * n;
             }
         }
     }
 
     static long f(int a, int b) {
-        int start = -1, end = -1;
         int si = -1;
+        int ei = -1;
 
         int s = 0;
         int e = primes.size() - 1;
@@ -72,7 +76,6 @@ public class Main {
             int cp = primes.get(m);
 
             if (cp >= a) {
-                start = cp;
                 si = m;
                 e = m - 1;
             } else {
@@ -88,19 +91,19 @@ public class Main {
             int cp = primes.get(m);
 
             if (cp <= b) {
-                end = cp;
+                ei = m;
                 s = m + 1;
             } else {
                 e = m - 1;
             }
         }
 
-        if (start == -1 || end == -1) return 0;
+        if (si == -1 || ei == -1 || si > ei) return 0;
 
         if (si % 2 == 0) {
-            return even[end] - even[start - 1];
+            return even[ei] - (si > 0 ? even[si - 1] : 0);
         } else {
-            return odd[end] - odd[start - 1];
+            return odd[ei] - (si > 0 ? odd[si - 1] : 0);
         }
     }
 }
