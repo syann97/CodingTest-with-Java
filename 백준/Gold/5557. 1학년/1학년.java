@@ -19,10 +19,12 @@ class Main {
             int k = Integer.parseInt(st.nextToken());
 
             for (int j = 0; j <= 20; j++) {
-                if (j - k >= 0 && dp[i-1][j] > 0) {
+                if (dp[i-1][j] == 0) continue;
+                
+                if (j - k >= 0) {
                     dp[i][j-k] += dp[i-1][j];
                 }
-                if (j + k <= 20 && dp[i-1][j] > 0) {
+                if (j + k <= 20) {
                     dp[i][j+k] += dp[i-1][j];
                 }
             }
