@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
@@ -13,26 +14,43 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
-        int[] lights = new int[N];
-        int[][] dp = new int[N][N];
-
+        ArrayList<Integer> temp = new ArrayList<>();
         st = new StringTokenizer(br.readLine());
+
+        int color;
+        int lastColor = -1;
         for (int i = 0; i < N; i++) {
-            lights[i] = Integer.parseInt(st.nextToken());
+            color = Integer.parseInt(st.nextToken());
+            if (color != lastColor) {
+                lastColor = color;
+                temp.add(color);
+            }
+        }
+
+        int L = temp.size();
+        int[] compact = new int[L];
+        for (int i = 0; i < L; i++) {
+            compact[i] = temp.get(i);
+        }
+        temp = null;
+
+        int[][] dp = new int[L][L];
+
+        for (int i = 0; i < L; i++) {
             Arrays.fill(dp[i], MAX);
         }
 
         int tmp;
-        for (int end = 0; end < N; end++) {
+        for (int end = 0; end < L; end++) {
             dp[end][end] = 0;
             for (int start = end - 1; start >= 0; start--) {
                 for (int mid = start; mid < end; mid++) {
                     tmp = dp[start][mid] + dp[mid+1][end];
-                    if (lights[start] != lights[mid+1]) tmp += 1;
+                    if (compact[start] != compact[mid+1]) tmp += 1;
                     dp[start][end] = Math.min(dp[start][end], tmp);
                 }
             }
         }
-        System.out.println(dp[0][N-1]);
+        System.out.println(dp[0][L-1]);
     }
 }
