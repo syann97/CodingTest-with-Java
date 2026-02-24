@@ -41,7 +41,6 @@ public class Main {
                 }
             }
         }
-
         System.out.println(findRoute(isLeft, H, W));
     }
 
@@ -54,6 +53,6 @@ public class Main {
             else y++;
         }
 
-        return String.format("%d %d", (y + 1), (x + 1));
+        return (y+1) + " " + (x+1);
     }
 }
