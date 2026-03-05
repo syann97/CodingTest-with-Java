@@ -1,24 +1,11 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 
-class Dust {
-    int y;
-    int x;
-
-    public Dust (int y, int x) {
-        this.y = y;
-        this.x = x;
-    }
-}
-
 public class Main {
     static StringTokenizer st;
-
-
     static int[] dy = {-1, 0, 1, 0};
     static int[] dx = {0, -1, 0, 1};
     public static void main(String[] args) throws IOException {
@@ -48,14 +35,11 @@ public class Main {
     }
 
     static int getAnswer(int R, int C, int T, int[][] current, int clean_y, int clean_x) {
-        ArrayDeque<Dust> q = new ArrayDeque<>();
         int[][] next = new int[R][C];
         arrayCopy(current, next, R, C);
 
         while (T > 0) {
-            findSpreadableDust(current, R, C, q);
-
-            spread(q, current, next, R, C);
+            findSpreadableDust(current, next, R, C);
 
             clean(next, R, C, clean_y, clean_x);
 
@@ -74,10 +58,10 @@ public class Main {
         return answer;
     }
 
-    private static void findSpreadableDust(int[][] room, int r, int c, ArrayDeque<Dust> q) {
+    private static void findSpreadableDust(int[][] current, int[][] next, int r, int c) {
         for (int i = 0; i < r; i++) {
             for (int j = 0; j < c; j++) {
-                if (room[i][j] >= 5) q.offer(new Dust(i, j));
+                if (current[i][j] >= 5) spread(current, next, i, j, r, c);
             }
         }
     }
@@ -150,23 +134,17 @@ public class Main {
     }
 
 
-    private static void spread(ArrayDeque<Dust> q, int[][] current, int[][] next, int R, int C) {
-        while (!q.isEmpty()) {
-            Dust dust = q.poll();
-            int y = dust.y;
-            int x = dust.x;
-            int spreadAmount = current[y][x] / 5;
+    private static void spread(int[][] current, int[][] next, int y, int x, int R, int C) {
+        int spreadAmount = current[y][x] / 5;
 
-            for (int d = 0; d <4; d++) {
-                int ny = y + dy[d];
-                int nx = x + dx[d];
+        for (int d = 0; d <4; d++) {
+            int ny = y + dy[d];
+            int nx = x + dx[d];
 
-                if (0 <= ny && ny < R && 0 <= nx && nx < C && current[ny][nx] != -1) {
-                    next[ny][nx] += spreadAmount;
-                    next[y][x] -= spreadAmount;
-                }
+            if (0 <= ny && ny < R && 0 <= nx && nx < C && current[ny][nx] != -1) {
+                next[ny][nx] += spreadAmount;
+                next[y][x] -= spreadAmount;
             }
         }
     }
-
 }
