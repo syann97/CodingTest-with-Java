@@ -9,24 +9,25 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int A = Integer.parseInt(st.nextToken());
-        int B = Integer.parseInt(st.nextToken());
-        int C = Integer.parseInt(st.nextToken());
+        int[] rooms = new int[3];
+        for (int i = 0; i < 3; i++) {
+            rooms[i] = Integer.parseInt(st.nextToken());
+        }
         int N = Integer.parseInt(st.nextToken());
-        boolean[] visited = new boolean[N+1];
-
-        System.out.println(bf(0, A, B, C, N, visited) ? 1 : 0);
+        System.out.println(dp(rooms, N));
     }
 
-    private static boolean bf(int count, int a, int b, int c, int n, boolean[] visited) {
-        if (count == n) return true;
+    static int dp (int[] rooms, int N) {
+        boolean[] dp = new boolean[N+1];
+        dp[0] = true;
 
-        visited[count] = true;
+        for (int room : rooms) {
+            for (int j = room; j < N; j++) {
+                if (dp[j - room]) dp[j] = true;
+            }
+            if (dp[N-room]) return 1;
+        }
 
-        if (count + a <= n && !visited[count+a] && bf(count + a, a, b, c, n, visited)) return true;
-        if (count + b <= n && !visited[count+b] && bf(count + b, a, b, c, n, visited)) return true;
-        if (count + c <= n && !visited[count+c] && bf(count + c, a, b, c, n, visited)) return true;
-
-        return false;
+        return 0;
     }
 }
