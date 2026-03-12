@@ -22,12 +22,11 @@ public class Main {
         dp[0] = true;
 
         for (int room : rooms) {
-            for (int j = room; j < N; j++) {
+            for (int j = room; j <= N; j++) {
                 if (dp[j - room]) dp[j] = true;
             }
-            if (dp[N-room]) return 1;
         }
 
-        return 0;
+        return dp[N] ? 1 : 0;
     }
 }
