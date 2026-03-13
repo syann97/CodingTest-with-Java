@@ -5,12 +5,13 @@ import java.util.StringTokenizer;
 
 
 public class Main {
+    static StringTokenizer st;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
         while (true) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+            st = new StringTokenizer(br.readLine());
             char baseChar = Character.toUpperCase(st.nextToken().charAt(0));
 
             if (baseChar == '*') break;
