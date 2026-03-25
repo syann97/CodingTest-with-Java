@@ -16,13 +16,13 @@ public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 	static List<Integer> roomSpaceList;
-	static List<Set<Integer>> nearRoomList;
 	static int[] dy = {0, 1, 0, -1};
 	static int[] dx = {1, 0, -1, 0};
 	static int[][] castleMap;
 	static int[][] mapIndex;
 	static int M;
 	static int N;
+	static int breakOneWallMaxArea;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -31,21 +31,8 @@ public class Main {
 
 		System.out.println(getRoomCount());
 		System.out.println(getMaxArea());
-		System.out.println(getBreakOneWallMaxArea());
+		System.out.println(breakOneWallMaxArea);
 	}
-
-	private static int getBreakOneWallMaxArea() {
-		int max = 0;
-		for (int i = 1; i < nearRoomList.size(); i++) {
-			int baseArea = roomSpaceList.get(i);
-			for (int target : nearRoomList.get(i)) {
-				int sumArea = baseArea + roomSpaceList.get(target);
-				max = Math.max(max, sumArea);
-			}
-		}
-		return max;
-	}
-
 
 	private static int getMaxArea() {
 		int max = 0;
@@ -71,13 +58,13 @@ public class Main {
 		}
 	}
 
-	static void bfs(int i, int j, int index) {
+	static void bfs(int sy, int sx, int index) {
 		int space = 0;
-		nearRoomList.add(new HashSet<>());
+		boolean[] visitedOtherRoom = new boolean[index];
 
 		ArrayDeque<Node> q = new ArrayDeque<>();
-		q.offer(new Node(i, j));
-		mapIndex[i][j] = index;
+		q.offer(new Node(sy, sx));
+		mapIndex[sy][sx] = index;
 
 		while (!q.isEmpty()) {
 			Node node = q.poll();
@@ -88,12 +75,18 @@ public class Main {
 				int ny = y + dy[d];
 				int nx = x + dx[d];
 
-				if (inbound(ny, nx) && isNotOtherRoom(ny, nx, index) && isNotWall(ny, nx, d) && isNotVisited(ny, nx)) {
+				if (inbound(ny, nx) && isNotOtherRoom(index, mapIndex[ny][nx], visitedOtherRoom) && isNotWall(ny, nx, d) && isNotVisited(ny, nx)) {
 					mapIndex[ny][nx] = index;
 					q.offer(new Node(ny, nx));
 				}
 			}
 			space++;
+		}
+
+		for (int i = 1; i < index; i++) {
+			if (visitedOtherRoom[i]) {
+				breakOneWallMaxArea = Math.max(breakOneWallMaxArea, space + roomSpaceList.get(i));
+			}
 		}
 
 		roomSpaceList.add(space);
@@ -103,9 +96,11 @@ public class Main {
 		return mapIndex[ny][nx] == 0;
 	}
 
-	static boolean isNotOtherRoom(int ny, int nx, int index) {
-		if (mapIndex[ny][nx] != 0 && mapIndex[ny][nx] != index) {
-			nearRoomList.get(index).add(mapIndex[ny][nx]);
+	static boolean isNotOtherRoom(int index, int other, boolean[] visited) {
+		if (index == other) return true;
+		if (visited[other]) return false;
+		if (other != 0) {
+			visited[other] = true;
 			return false;
 		}
 		return true;
@@ -120,11 +115,9 @@ public class Main {
 	}
 
 	static void init() throws IOException {
+		breakOneWallMaxArea = 0;
 		roomSpaceList = new ArrayList<>();
-		nearRoomList = new ArrayList<>();
-
 		roomSpaceList.add(0);
-		nearRoomList.add(new HashSet<>());
 
 		st = new StringTokenizer(br.readLine());
 		M = Integer.parseInt(st.nextToken());
