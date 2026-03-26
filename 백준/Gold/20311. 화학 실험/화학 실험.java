@@ -44,7 +44,7 @@ public class Main {
 		Arrays.sort(c);
 
 		if (!getAnswer()) {
-			System.out.println(-1);
+			sb.append(-1);
 		}
 		else {
 			for (int i = 0; i < N; i++) {
