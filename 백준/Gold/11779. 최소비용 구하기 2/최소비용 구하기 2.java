@@ -4,27 +4,38 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 
+class Node {
+	int v;
+	int w;
+	Node node;
+
+	public Node(int v, int w, Node node) {
+		this.v = v;
+		this.w = w;
+		this.node = node;
+	}
+}
+
 class Edge implements Comparable<Edge> {
 	int v;
-	long w;
+	int w;
 
-	public Edge (int v, long w) {
+	public Edge(int v, int w) {
 		this.v = v;
 		this.w = w;
 	}
 
 	@Override
 	public int compareTo(Edge o) {
-		return Long.compare(this.w, o.w);
+		return this.w - o.w;
 	}
 }
 
 
 public class Main {
-	static ArrayList<Edge>[] graph;
+	static Node[] graph;
 	static StringTokenizer st;
-	static final long LONG_MAX = Long.MAX_VALUE;
-	static final int INT_MAX = Integer.MAX_VALUE;
+	static final int MAX = Integer.MAX_VALUE;
 	static int N;
 	static int M;
 	public static void main(String[] args) throws IOException {
@@ -32,10 +43,7 @@ public class Main {
 		N = Integer.parseInt(br.readLine());
 		M = Integer.parseInt(br.readLine());
 
-		graph = new ArrayList[N+1];
-		for (int i = 1; i <= N; i++) {
-			graph[i] = new ArrayList<>();
-		}
+		graph = new Node[N+1];
 
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -43,7 +51,7 @@ public class Main {
 			int v = Integer.parseInt(st.nextToken());
 			int w = Integer.parseInt(st.nextToken());
 
-			graph[u].add(new Edge(v, w));
+			graph[u] = new Node(v, w, graph[u]);
 		}
 
 		st = new StringTokenizer(br.readLine());
@@ -54,10 +62,10 @@ public class Main {
 
 
 	static void dijkstra(int s, int e) {
-		long[] dist = new long[N+1];
+		int[] dist = new int[N+1];
 		int[] trace = new int[N+1];
 
-		Arrays.fill(dist, LONG_MAX);
+		Arrays.fill(dist, MAX);
 		dist[s] = 0;
 		trace[s] = s;
 
@@ -67,14 +75,14 @@ public class Main {
 		while(!pq.isEmpty()) {
 			Edge edge = pq.poll();
 			int v = edge.v;
-			long w = edge.w;
+			int w = edge.w;
 
 			if (v == e) break;
 			if (dist[v] < w) continue;
 
-			for (Edge next : graph[v]) {
+			for (Node next = graph[v]; next != null; next = next.node) {
 				int nv = next.v;
-				long nw = w + next.w;
+				int nw = w + next.w;
 
 				if (nw < dist[nv]) {
 					dist[nv] = nw;
