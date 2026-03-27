@@ -69,6 +69,7 @@ public class Main {
 			int v = edge.v;
 			long w = edge.w;
 
+			if (v == e) break;
 			if (dist[v] < w) continue;
 
 			for (Edge next : graph[v]) {
