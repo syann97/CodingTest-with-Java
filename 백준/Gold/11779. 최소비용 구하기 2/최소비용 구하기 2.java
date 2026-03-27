@@ -94,15 +94,13 @@ public class Main {
 
 		ArrayDeque<Integer> stack = new ArrayDeque<>();
 
-		int cv = trace[e];
-		stack.push(e);
+		int cv = e;
 
-		while (cv != trace[cv]) {
+		while (true) {
 			stack.push(cv);
+			if (cv == s) break;
 			cv = trace[cv];
 		}
-
-		if (stack.peek() != cv) stack.push(cv);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(dist[e]).append("\n").append(stack.size()).append("\n");
