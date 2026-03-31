@@ -3,63 +3,67 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+class Node {
+	int next;
+	Node node;
+
+	public Node (int next, Node node) {
+		this.next = next;
+		this.node = node;
+	}
+}
 
 public class Main {
 	static StringTokenizer st;
-	static Map<String, Set<String>> ancestor;
-	static Map<String, Set<String>> directChild;
-	static Map<String, Integer> in;
+	static Map<String, Integer> indexMap;
+	static ArrayList<Integer>[] directChild;
+	static Node[] graph;
+	static String[] s;
+	static int[] in;
+	static int N;
+
 	public static void main(String[] args) throws IOException {
 		init();
 		topologySort();
 	}
 
 	static void topologySort() {
-		PriorityQueue<String> pq = new PriorityQueue<>();
-		PriorityQueue<String> topAncestor = new PriorityQueue<>();
-		for (Map.Entry<String, Integer> entry : in.entrySet()) {
-			if (entry.getValue() == 0) {
-				pq.offer(entry.getKey());
-			}
-		}
-
-		while(!pq.isEmpty()) {
-			String candidate = pq.poll();
-
-			if(ancestor.get(candidate).isEmpty()) {
-				topAncestor.offer(candidate);
-			}
-
-			for (String parent : ancestor.get(candidate)) {
-				for (String child : directChild.get(candidate)) {
-					directChild.get(parent).remove(child);
-				}
-
-				in.put(parent, in.get(parent)-1);
-				if (in.get(parent) == 0) {
-					pq.offer(parent);
-				}
-			}
-		}
-
-
+		PriorityQueue<Integer> pq = new PriorityQueue<>();
 		StringBuilder sb = new StringBuilder();
-		int size = topAncestor.size();
 
-		sb.append(size).append("\n");
+		for (int i = 1; i <= N; i++) {
+			if (in[i] == 0) {
+				pq.offer(i);
+			}
+		}
 
-		if (size != 0) {
-			while (!topAncestor.isEmpty()) {
-				sb.append(topAncestor.poll()).append(" ");
+		sb.append(pq.size()).append("\n");
+		if (!pq.isEmpty()) {
+			for (int ancestor : pq) {
+				sb.append(s[ancestor]).append(" ");
 			}
 			sb.append("\n");
 		}
 
-		for (Map.Entry<String, Set<String>> entry : directChild.entrySet()) {
-			sb.append(entry.getKey()).append(" ").append(entry.getValue().size());
+		while (!pq.isEmpty()) {
+			int v = pq.poll();
 
-			for (String child : entry.getValue()) {
-				sb.append(" ").append(child);
+			for (Node node = graph[v]; node != null; node = node.node) {
+				int nv = node.next;
+
+				if (--in[nv] == 0) {
+					directChild[v].add(nv);
+					pq.offer(nv);
+				}
+			}
+		}
+
+		for (int i = 1; i <= N; i++) {
+			sb.append(s[i]).append(" ").append(directChild[i].size());
+			Collections.sort(directChild[i]);
+
+			for (int index : directChild[i]) {
+				sb.append(" ").append(s[index]);
 			}
 			sb.append("\n");
 		}
@@ -69,29 +73,37 @@ public class Main {
 
 	static void init() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
+		N = Integer.parseInt(br.readLine());
+		s = new String[N+1];
+		indexMap = new HashMap<>();
+		graph = new Node[N+1];
+		in = new int[N+1];
+		s[0] = "";
+
 		st = new StringTokenizer(br.readLine());
+		for (int i = 1; i <= N; i++) {
+			s[i] = st.nextToken();
+		}
 
-		ancestor = new TreeMap<>();
-		directChild = new TreeMap<>();
-		in = new TreeMap<>();
+		Arrays.sort(s);
 
-		for (int i = 0; i < N; i++) {
-			String key = st.nextToken();
-			ancestor.put(key, new TreeSet<>());
-			directChild.put(key, new TreeSet<>());
-			in.put(key, 0);
+		for (int i = 1; i <= N; i++) {
+			indexMap.put(s[i], i);
 		}
 
 		int M = Integer.parseInt(br.readLine());
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			String child = st.nextToken();
-			String parent = st.nextToken();
+			int child = indexMap.get(st.nextToken());
+			int parent = indexMap.get(st.nextToken());
 
-			ancestor.get(child).add(parent);
-			directChild.get(parent).add(child);
-			in.put(parent, in.get(parent) + 1);
+			in[child]++;
+			graph[parent] = new Node(child, graph[parent]);
+		}
+
+		directChild = new ArrayList[N+1];
+		for (int i = 1; i <= N; i++) {
+			directChild[i] = new ArrayList<>();
 		}
 	}
 }
