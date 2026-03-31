@@ -28,32 +28,32 @@ public class Main {
 	}
 
 	static void topologySort() {
-		PriorityQueue<Integer> pq = new PriorityQueue<>();
+		ArrayDeque<Integer> q = new ArrayDeque<>();
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 1; i <= N; i++) {
 			if (in[i] == 0) {
-				pq.offer(i);
+				q.offer(i);
 			}
 		}
 
-		sb.append(pq.size()).append("\n");
-		if (!pq.isEmpty()) {
-			for (int ancestor : pq) {
+		sb.append(q.size()).append("\n");
+		if (!q.isEmpty()) {
+			for (int ancestor : q) {
 				sb.append(s[ancestor]).append(" ");
 			}
 			sb.append("\n");
 		}
 
-		while (!pq.isEmpty()) {
-			int v = pq.poll();
+		while (!q.isEmpty()) {
+			int v = q.poll();
 
 			for (Node node = graph[v]; node != null; node = node.node) {
 				int nv = node.next;
 
 				if (--in[nv] == 0) {
 					directChild[v].add(nv);
-					pq.offer(nv);
+					q.offer(nv);
 				}
 			}
 		}
