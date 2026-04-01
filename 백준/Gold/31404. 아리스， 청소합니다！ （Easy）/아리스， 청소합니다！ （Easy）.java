@@ -57,7 +57,7 @@ public class Main {
 		int moves = 1;
 		int save = 1;
 		while (true) {
-			// 사이클 감지 (아주 잘 작성하셨습니다!)
+
 			if (visited[R][C][D] == save) {
 				return save - 1;
 			}
@@ -74,7 +74,7 @@ public class Main {
 
 			R += dy[D];
 			C += dx[D];
-			
+
 			if (outbound()) {
 				return isCleaning ? moves : save - 1;
 			}
