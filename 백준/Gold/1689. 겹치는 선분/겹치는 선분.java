@@ -32,30 +32,21 @@ public class Main {
 	static int greedy() {
 		int s = 0;
 		int e = 0;
-		int max = 0;
 		int stack = 0;
-		int currentEnd = end[0].v;
+		int max = 0;;
 
 		while (s < N) {
-			while (s < N && start[s].v < currentEnd) {
-				s++;
+			if (start[s].v < end[e].v) {
 				stack++;
+				s++;
+				max = Math.max(max, stack);
 			}
-
-			max = Math.max(max, stack);
-
-			if (s >= N) return max;
-
-			while (e < N && end[e].v == currentEnd) {
-				e++;
+			else {
 				stack--;
+				e++;
 			}
-
-			if (e >= N) return max;
-
-			currentEnd = end[e].v;
 		}
-		
+
 		return max;
 	}
 
