@@ -3,26 +3,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-class Node implements Comparable<Node> {
-	int v;
-	int w;
-
-	public Node (int v, int w) {
-		this.v = v;
-		this.w = w;
-	}
-
-	@Override
-	public int compareTo(Node o) {
-		return this.v - o.v;
-	}
-}
-
-
 public class Main {
 	static StringTokenizer st;
-	static Node[] start;
-	static Node[] end;
+	static int[] start;
+	static int[] end;
 	static int N;
 	public static void main(String[] args) throws IOException {
 		init();
@@ -36,7 +20,7 @@ public class Main {
 		int max = 0;;
 
 		while (s < N) {
-			if (start[s].v < end[e].v) {
+			if (start[s] < end[e]) {
 				stack++;
 				s++;
 				max = Math.max(max, stack);
@@ -53,13 +37,13 @@ public class Main {
 	static void init() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
-		start = new Node[N];
-		end = new Node[N];
+		start = new int[N];
+		end = new int[N];
 
 		for (int i = 0; i < N; ++i) {
 			st = new StringTokenizer(br.readLine());
-			start[i] = new Node(Integer.parseInt(st.nextToken()), 1);
-			end[i] = new Node(Integer.parseInt(st.nextToken()), -1);
+			start[i] = Integer.parseInt(st.nextToken());
+			end[i] = Integer.parseInt(st.nextToken());
 		}
 
 		Arrays.sort(start);
