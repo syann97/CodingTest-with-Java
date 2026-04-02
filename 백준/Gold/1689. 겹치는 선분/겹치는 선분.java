@@ -21,7 +21,8 @@ class Node implements Comparable<Node> {
 
 public class Main {
 	static StringTokenizer st;
-	static Node[] nodes;
+	static Node[] start;
+	static Node[] end;
 	static int N;
 	public static void main(String[] args) throws IOException {
 		init();
@@ -29,35 +30,48 @@ public class Main {
 	}
 
 	static int greedy() {
-		int stack = 0;
+		int s = 0;
+		int e = 0;
 		int max = 0;
-		int before = -1;
+		int stack = 0;
+		int currentEnd = end[0].v;
 
-		for (Node node : nodes) {
-			int v = node.v;
-			
-			if (v != before) {
-				max = Math.max(max, stack);
-				before = v;
+		while (s < N) {
+			while (s < N && start[s].v < currentEnd) {
+				s++;
+				stack++;
 			}
 
-			stack += node.w;
-		}
+			max = Math.max(max, stack);
 
+			if (s >= N) return max;
+
+			while (e < N && end[e].v == currentEnd) {
+				e++;
+				stack--;
+			}
+
+			if (e >= N) return max;
+
+			currentEnd = end[e].v;
+		}
+		
 		return max;
 	}
 
 	static void init() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
-		nodes = new Node[2 * N];
+		start = new Node[N];
+		end = new Node[N];
 
-		for (int i = 0; i < 2 * N; i += 2) {
+		for (int i = 0; i < N; ++i) {
 			st = new StringTokenizer(br.readLine());
-			nodes[i] = new Node(Integer.parseInt(st.nextToken()), 1);
-			nodes[i+1] = new Node(Integer.parseInt(st.nextToken()), -1);
+			start[i] = new Node(Integer.parseInt(st.nextToken()), 1);
+			end[i] = new Node(Integer.parseInt(st.nextToken()), -1);
 		}
 
-		Arrays.sort(nodes);
+		Arrays.sort(start);
+		Arrays.sort(end);
 	}
 }
