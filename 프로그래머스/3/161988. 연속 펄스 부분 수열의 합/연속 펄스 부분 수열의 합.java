@@ -1,28 +1,19 @@
 class Solution {
     public long solution(int[] sequence) {
-        long evenMinus = 0;
-        long oddMinus = 0;
+        long sumA = 0;
+        long sumB = 0;
         long max = 0;
         
         for (int i = 0; i < sequence.length; i++) {
-            int evenCurrent = sequence[i] * (i % 2 == 0 ? -1 : 1);
-            int oddCurrent = sequence[i] * (i % 2 == 1 ? -1 : 1);
+            int pulse = i % 2 == 0 ? -1 : 1;
+            int currentA = sequence[i] * pulse;
+            int currentB = sequence[i] * (-pulse);
             
-            if (evenMinus + evenCurrent < 0) {
-                evenMinus = 0;
-            }
-            else {
-                evenMinus += evenCurrent;
-                max = Math.max(max, evenMinus);
-            }
+            sumA = Math.max(sumA + currentA, 0);
+            sumB = Math.max(sumB + currentB, 0);
             
-            if (oddMinus + oddCurrent < 0) {
-                oddMinus = 0;
-            }
-            else {
-                oddMinus += oddCurrent;
-                max = Math.max(max, oddMinus);
-            }
+            if (sumA + currentA >= 0) max = Math.max(max, sumA);
+            if (sumB + currentB >= 0) max = Math.max(max, sumB);
         }
         
         return max;
