@@ -18,7 +18,6 @@ public class Main {
 	static boolean[] visited;
 	static Node[] graph;
 	static int[][] dp;
-	static int N;
 	public static void main(String[] args) throws IOException {
 		init();
 		dfs(1);
@@ -44,7 +43,7 @@ public class Main {
 
 	static void init() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		N = Integer.parseInt(br.readLine());
+		int N = Integer.parseInt(br.readLine());
 		dp = new int[N+1][2];
 		graph = new Node[N+1];
 		visited = new boolean[N+1];
