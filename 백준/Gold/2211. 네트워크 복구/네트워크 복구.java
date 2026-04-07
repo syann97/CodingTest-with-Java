@@ -73,16 +73,14 @@ public class Main {
 			}
 		}
 
-		int count = 0;
 		StringBuilder sb = new StringBuilder();
+		sb.append(N-1).append("\n");
 		for (int i = 2; i <= N; i++) {
 			if (parent[i] != 0) {
 				sb.append(i).append(" ").append(parent[i]).append("\n");
-				count++;
 			}
 		}
 
-		System.out.println(count);
 		System.out.print(sb);
 	}
 }
