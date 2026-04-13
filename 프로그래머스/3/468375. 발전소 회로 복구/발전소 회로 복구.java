@@ -163,15 +163,12 @@ class Solution {
         
         int uY = uInfo[1]-1, uX = uInfo[2]-1, uF = uInfo[0];
         int vY = vInfo[1]-1, vX = vInfo[2]-1, vF = vInfo[0];
-        
-        int elevDist = dist[uY][uX] + dist[vY][vX] + Math.abs(uF - vF);
 
         if (uF == vF) {
-            int direct = bfs(uY, uX, vY, vX);
-            return Math.min(direct, elevDist);
+            return bfs(uY, uX, vY, vX);
         }
         
-        return elevDist;
+        return dist[uY][uX] + dist[vY][vX] + Math.abs(uF - vF);
     }
     
     static int bfs(int sy, int sx, int ey, int ex) {
@@ -204,6 +201,6 @@ class Solution {
                 }
             }
         }
-        return MAX / 2;
+        return MAX;
     }
 }
