@@ -3,58 +3,45 @@ import java.util.*;
 class Solution {
     static int N;
     static int[] info;
-    static int max;
     static int[] answer;
-    public int[] solution(int n, int[] apeach) {
-        max = -1;
+    static int max;
+    public int[] solution(int n, int[] information) {
         N = n;
-        info = apeach;
+        max = 0;
+        info = information;
         answer = new int[11];
         
-        // 어피치가 화살 n발 선으로 
-        // 이후 라이언이 n발
-        // 과녁판 -> 양궁판과 동일 바깥 = 0
+        dfs(0, n, new int[11]);
         
-        // 제약 조건
-        // k점을 a발 , b발 맞춘 경우 더 많이 맞힌 선수 k점
-        // a == b 일 경우 어피치 (선으로 쏜 친구)
-        // 둘 다 0발 -> 무득점
-        
-        // 각 선 수 최종 점수 계산
-        // 최종 점수 높으면 우승자 -> 이것도 같은 경우 (어피치 우승)
-        
-        
-        // 라이언이 쏜 상황
-        // 무조건 비기는 상황 없어야됨 최종적으로 하나라도 이겨야 함
-        
-        // 문제 정의 최종 승리
-        // n 판 중 n/2+1판 이겨야 함
-        dfs(0, n, 0, new int[11]);
-        
+        // 출력
+        // 라이언이 어피치를 가장 큰 점수 차이로 이기기 위햏 n발의 화살을 어떤 과녁에 맞혀야 하는지
+        // 화살의 개수는 n  (이 과녁의 점수의 개수를 차례대로 담은 정답을 출력)
+        // 지거나 비기는 경우 [-1] 반환
         for (int i = 0; i <= 10; i++) {
-            if (answer[i] != 0) {
-                return answer;
-            }
+            if (answer[i] != 0) return answer;
         }
         
+        // 예외
+        // 지거나 비기는 경우 [-1] 반환
         return new int[]{-1};
     }
     
-    static void dfs(int index, int rest, int total, int[] record) {
+    
+    
+    
+    static void dfs(int index, int rest, int[] currentInfo) {
+        // 기능
+        // dfs
+        
         if (rest == 0) {
-            int point = getPoint(record);
-            if (point <= 0) return;
-            if (point > max) {
-                max = point;
-                for (int i = 0; i <= 10; i++) {
-                    answer[i] = record[i];
+            int diff = getDiff(currentInfo);
+            if (diff > 0) {
+                if (max < diff) {
+                    max = diff;
+                    copy(currentInfo);
                 }
-            }
-            else if (point == max) {
-                if (compare(record)) {
-                    for (int i = 0; i <= 10; i++) {
-                        answer[i] = record[i];
-                    }
+                else if (max == diff && isBetter(currentInfo)) {
+                    copy(currentInfo);
                 }
             }
             return;
@@ -62,43 +49,56 @@ class Solution {
         
         if (index == 11) return;
         
-        // 상관없이 넘긴다
+        // 정의
+        // 1. 어피치 화살 n발 -> 라이언 화살 n발
+        // 2. 0점 ~ 10점까지의 과녁
+        // 3. k점에 많은 화살을 맞춘 선수가 점수 k점 ()
+            // 제약 -> 동일한 경우는 어피치 승
+            // -> 둘다 0발인 경우 패스
+        // 4. 각 선수의 최종 점수 계산
+        // 5. 최종 점수 높은 사람 우승 
         if (index == 10) {
-            record[index] = rest;
-            dfs(index+1, 0, total, record);
-            record[index] = 0;
+            currentInfo[index] = rest;
+            dfs(index+1, 0, currentInfo);
+            currentInfo[index] = 0;
         }
         
-        // 이길 가능성 있다 
         if (info[index] < rest) {
-            record[index] = info[index] + 1;
-            dfs(index+1, rest-(info[index]+1), total+(10-index), record);
-            record[index] = 0;
+            currentInfo[index] = info[index] + 1;
+            dfs(index+1, rest - (info[index] + 1), currentInfo);
+            currentInfo[index] = 0;
         }
-        
-    
-        dfs(index+1, rest, total, record);
+            
+        dfs(index+1, rest, currentInfo);
     }
-    
-    static boolean compare(int[] record) {
+    static boolean isBetter(int[] currentInfo) {
         for (int i = 10; i >= 0; i--) {
-            if (answer[i] == record[i]) continue;
-            if (answer[i] < record[i]) return true;
-            else return false;
+            if (answer[i] == currentInfo[i]) continue;
+            if (answer[i] < currentInfo[i]) return true;
+            return false;
         }
         return false;
     }
     
-    static int getPoint(int[] record) {
+    // 이기는 경우인지
+    // 가장 큰 점수 차인지 비교
+    static int getDiff(int[] currentInfo) {
         int apeach = 0;
         int ryan = 0;
+        
         for (int i = 0; i <= 10; i++) {
-            if (info[i] == 0 && record[i] == 0) continue;
-            if (info[i] >= record[i]) apeach += (10 - i);
-            else ryan += (10 - i);
+            if (info[i] == 0 && currentInfo[i] == 0) continue;
+            if (info[i] >= currentInfo[i]) apeach += 10 - i;
+            else ryan += 10 - i;
         }
-
+        
         return ryan - apeach;
     }
+    
+    
+    static void copy(int[] currentInfo) {
+        for (int i = 0; i <= 10; i++) {
+            answer[i] = currentInfo[i];
+        }
+    }
 }
-
