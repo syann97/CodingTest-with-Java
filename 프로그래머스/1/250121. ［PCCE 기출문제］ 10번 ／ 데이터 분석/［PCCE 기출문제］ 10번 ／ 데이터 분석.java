@@ -29,11 +29,6 @@ class Solution {
            return o1[order.get(sort_by)] - o2[order.get(sort_by)];
         });
         
-        int[][] sortedArray = new int[validData.size()][4];
-        for (int i = 0; i < validData.size(); i++) {
-            sortedArray[i] = validData.get(i);
-        }
-        
-        return sortedArray;
+        return validData.stream().toArray(int[][]::new);
     }
 }
