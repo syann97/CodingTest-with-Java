@@ -22,10 +22,10 @@ public class Main {
 
         ArrayDeque<Integer> q = new ArrayDeque<>();
         for (int i = 1; i <= L; i++) {
-            while (!q.isEmpty() && q.peekFirst() < i) q.poll();
+            if (!q.isEmpty() && q.peekFirst() < i) q.poll();
 
             int z = Integer.parseInt(br.readLine());
-            int damage = Math.max(Math.min(ml, i) - q.size(), 0) * mk;
+            int damage = (Math.min(ml, i) - q.size()) * mk;
 
             if (z > damage) {
                 if (--C < 0) return "NO";
