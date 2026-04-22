@@ -1,16 +1,18 @@
+import java.util.*;
+
 class Solution {
     boolean solution(String s) {
-        int left = 0;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            
-            if (c == '(') left++;
+        boolean answer = true;
+        ArrayDeque<Character> stack = new ArrayDeque<>();
+        
+        for (char c : s.toCharArray()) {
+            if (c == '(') stack.push('(');
             else {
-                if (left == 0) return false;
-                left--;
+                if (stack.isEmpty()) return false;
+                stack.poll();
             }
         }
 
-        return left == 0;
+        return stack.isEmpty();
     }
 }
