@@ -27,43 +27,13 @@ class Solution {
     static int[][] dp;
 
     public int solution(int h, String[] g, int[][] p, int[][] s) {
-        grid = g;
-        panels = p;
-        seqs = s;
-        n = grid.length;
-        m = grid[0].length();
-        k = panels.length;
-        
-        visited = new boolean[n][m];
-        dp = new int[1 << (k + 1)][k + 1];
-        
-        for(int i = 0; i < dp.length; i++) {
-            Arrays.fill(dp[i], MAX);
-        }
-        
+        init(h, g, p, s);
         setElevatorPos();
         setDistFromElevator();
         setPanelDist();
         setGraph();
         
-        min = MAX;
-        
-        for (int v = 1; v <= k; v++) {
-            if (in[v] == 0) {
-                int bitmask = (1 << v);
-                
-                for (Node node = graph[v]; node != null; node = node.node) {
-                    in[node.v]--;
-                }
-                
-                dfs(panelDist[1][v], 1, v, bitmask);
-                
-                for (Node node = graph[v]; node != null; node = node.node) {
-                    in[node.v]++;
-                }
-            }
-        }
-        return min;
+        return getAnswer();
     }
     
     static void dfs(int currentDist, int count, int u, int bitmask) {
@@ -202,5 +172,43 @@ class Solution {
             }
         }
         return MAX;
+    }
+    
+    static void init(int h, String[] g, int[][] p, int[][] s) {
+        grid = g;
+        panels = p;
+        seqs = s;
+        n = grid.length;
+        m = grid[0].length();
+        k = panels.length;
+        
+        visited = new boolean[n][m];
+        dp = new int[1 << (k + 1)][k + 1];
+        
+        for(int i = 0; i < dp.length; i++) {
+            Arrays.fill(dp[i], MAX);
+        }
+    }
+    
+    static int getAnswer() {
+        min = MAX;
+        
+        for (int v = 1; v <= k; v++) {
+            if (in[v] == 0) {
+                int bitmask = (1 << v);
+                
+                for (Node node = graph[v]; node != null; node = node.node) {
+                    in[node.v]--;
+                }
+                
+                dfs(panelDist[1][v], 1, v, bitmask);
+                
+                for (Node node = graph[v]; node != null; node = node.node) {
+                    in[node.v]++;
+                }
+            }
+        }
+        
+        return min;
     }
 }
