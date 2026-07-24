@@ -1,10 +1,10 @@
 # [level 3] 발전소 회로 복구 - 468375 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/468375) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/468375?language=java) 
 
 ### 성능 요약
 
-메모리: 107 MB, 시간: 139.34 ms
+메모리: 84.5 MB, 시간: 100.49 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 04월 27일 14:49:27
+2026년 07월 24일 17:17:31
 
 ### 문제 설명
 
