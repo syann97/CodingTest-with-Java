@@ -1,40 +1,37 @@
-import java.util.*;
-
 class Solution {
     public long solution(int n, int[] times) {
-        int min = Integer.MAX_VALUE;
+        long answer = 0;
         
+        long max = 0;
         for (int time : times) {
-            min = Math.min(min, time);
+            max = Math.max(max, time);
         }
         
         long s = 1;
-        long e = (long)min * n;
-        long answer = 0;
+        long e = max * n;
         
         
-        while (s <= e) {
-            long m = s + (e - s) / 2;
+        while (s < e) {
+            long m = (s + e) / 2;
             
-            if (isValidTime(m, times, n)) {
-                answer = m;
-                e = m - 1;
+            if (isPossible(m, times, n)) {
+                e = m;
             }
             else {
-                s = m + 1;                
+                s = m + 1;
             }
         }
         
-        return answer;
+        return e;
     }
     
-    static boolean isValidTime(long time, int[] times, int n) {
+    static boolean isPossible(long guess, int[] times, int target) {
         long count = 0;
         
-        for (int t : times) {
-            count += time / t;
+        for (int time : times) {
+            count += guess / time;
         }
         
-        return count >= n;
+        return count >= target;
     }
 }
